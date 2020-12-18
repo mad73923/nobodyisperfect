@@ -35,11 +35,14 @@ export class AddnewuserComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.error = '';
+    this.serverMessage = '';
 
       // stop here if form is invalid
       if (this.newUserForm.invalid) {
         return;
     }
+    this.submitted = false;
     
     this.loading = true;
     let user = new User();
@@ -51,12 +54,13 @@ export class AddnewuserComponent implements OnInit {
         .pipe(first())
         .subscribe(
             data => {
-                this.loading = false;
                 this.newUserForm.reset();
                 this.serverMessage = data.message;
+                this.loading = false;
             },
             error => {
                 this.error = error;
+                this.loading = false;
                 this.loading = false;
             });
 }
