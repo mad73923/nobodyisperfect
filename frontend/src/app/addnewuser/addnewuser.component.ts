@@ -63,5 +63,5 @@ export class AddnewuserComponent implements OnInit {
                 this.loading = false;
                 this.loading = false;
             });
-}
   }
+}

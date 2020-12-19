@@ -97,11 +97,6 @@ function addNewUser(req, res, next) {
     userService.addNewUser(req.body)
         .then(user => res.status(200).json({'user': user, 'message': 'User created.'}))
         .catch(next);
-    //res.sendStatus(200);
-    // userService.addNewUser(req.params)
-    //     .then(user => user ? res.json(user) : res.sendStatus(401))
-    //     .catch(res.sendStatus(401));
-    //     next();
 }
 
 function getRefreshTokens(req, res, next) {
