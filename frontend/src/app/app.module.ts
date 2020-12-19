@@ -12,9 +12,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
 import { AdminComponent } from './admin';
-import { LoginComponent } from './login';;
-import { AddnewuserComponent } from './addnewuser/addnewuser.component'
-
+import { LoginComponent } from './login';
+import { AddnewuserComponent } from './addnewuser/addnewuser.component';
+import { QuestionComponent } from './question/question.component';
+import { QuestionmanagementComponent } from './questionmanagement/questionmanagement.component';
 @NgModule({
     imports: [
         BrowserModule,
@@ -28,7 +29,9 @@ import { AddnewuserComponent } from './addnewuser/addnewuser.component'
         AdminComponent,
         LoginComponent
 ,
-        AddnewuserComponent    ],
+        AddnewuserComponent ,
+        QuestionComponent ,
+        QuestionmanagementComponent  ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

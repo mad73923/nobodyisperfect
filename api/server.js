@@ -19,6 +19,8 @@ app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: 
 
 // api routes
 app.use('/users', require('./users/users.controller'));
+// question routes
+app.use('/question', require('./question/question.controller'))
 
 // swagger docs route
 app.use('/api-docs', require('_helpers/swagger'));
@@ -31,3 +33,5 @@ const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 
 app.listen(port, () => {
     console.log('Server listening on port ' + port);
 });
+
+module.exports = app;
