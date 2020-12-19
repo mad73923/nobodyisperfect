@@ -46,6 +46,7 @@ describe('Question', () => {
         });
     });
 
+    let addedQuestion = {};
     describe('/POST', () => {
         it('it should add a new question', (done) => {
             chai.request(server)
@@ -54,6 +55,21 @@ describe('Question', () => {
             .send(mockQuestion)
             .end((err, res) => {
                 expect(res.statusCode).to.equal(200);
+                addedQuestion = res.body;
+                done();
+            });
+        });
+    });
+    describe('/PUT', () => {
+        it('it should be possible to update a question', (done) => {
+            addedQuestion.text = 'nonesense';
+            chai.request(server)
+            .put('/question')
+            .set({ Authorization: `Bearer ${token}` })
+            .send(addedQuestion)
+            .end((err, res) => {
+                //console.log(res);
+                res.body.text.should.equal('nonesense');
                 done();
             });
         });
