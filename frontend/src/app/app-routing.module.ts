@@ -5,7 +5,7 @@ import { HomeComponent } from './home';
 import { AdminComponent } from './admin';
 import { LoginComponent } from './login';
 import { QuestionmanagementComponent } from './questionmanagement';
-import { QuestionComponent } from './question';
+import { QuestionEditComponent } from './question';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
 
@@ -31,7 +31,7 @@ const routes: Routes = [
     },
     {
         path: 'newquestion',
-        component: QuestionComponent
+        component: QuestionEditComponent
     },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

@@ -1,13 +1,11 @@
 <div class="mt-4">
-    <h3>Question</h3>
+    <h3>{{heading}}</h3>
     <div class="mx-3 my-3">
         <p class=text-right><b>Creator:</b> {{creatorUsername}}</p>
         <textarea type="text" class="form-control" id="workout-name" placeholder="Your question goes here..." [(ngModel)]="question.text"></textarea>
-        <p *ngIf="!edit">{{question.text}}</p>
     </div>
     <h4>Answer</h4>
     <div class="mx-3 my-3">
-        <textarea class="form-control" id="validationTextarea" placeholder="Your answer goes here..." *ngIf="edit" [(ngModel)]="question.correctAnswer"></textarea>
-        <p *ngIf="edit">{{question.correctAnswer}}</p>
+        <textarea class="form-control" id="validationTextarea" placeholder="Your answer goes here..." [(ngModel)]="question.correctAnswer"></textarea>
     </div>
 </div>

@@ -15,7 +15,7 @@ import { HomeComponent } from './home';
 import { AdminComponent } from './admin';
 import { LoginComponent } from './login';
 import { AddnewuserComponent } from './addnewuser/addnewuser.component';
-import { QuestionComponent } from './question';
+import { QuestionEditComponent } from './question';
 import { QuestionmanagementComponent } from './questionmanagement';
 @NgModule({
     imports: [
@@ -31,7 +31,7 @@ import { QuestionmanagementComponent } from './questionmanagement';
         AdminComponent,
         LoginComponent,
         AddnewuserComponent ,
-        QuestionComponent ,
+        QuestionEditComponent ,
         QuestionmanagementComponent ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

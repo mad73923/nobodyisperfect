@@ -1,1 +1,1 @@
-export * from './question.component';
+export * from './questionedit.component';
