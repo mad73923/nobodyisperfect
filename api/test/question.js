@@ -30,8 +30,6 @@ describe('Question', () => {
     let userToken = {};
 
     before((done) => {
-        // clear database
-        Question.deleteMany({}).exec();
         // auth admin
         chai.request(server)
             .post('/users/authenticate')

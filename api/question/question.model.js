@@ -7,7 +7,8 @@ const schema = new Schema({
     correctAnswer: { type: String, required: true },
     creator: { type: ObjectId, ref: 'User', required: true },
     createdAt: {type: Date, default: Date.now},
-    accepted: {type: Boolean, default: false}
+    accepted: {type: Boolean, default: false},
+    imagePath: {type: String}
 });
 
 module.exports = mongoose.model('Question', schema);

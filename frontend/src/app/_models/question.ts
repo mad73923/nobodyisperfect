@@ -5,4 +5,5 @@ export class Question {
     creator: string;
     createdAt: string;
     accepted: boolean;
+    imagePath: string;
 }
