@@ -1,10 +1,12 @@
 const db = require('_helpers/db');
+const { func } = require('@hapi/joi');
 
 
 module.exports = {
     getAll,
     addNewQuestion,
-    updateQuestion
+    updateQuestion,
+    deleteQuestion
 }
 
 async function getAll(){
@@ -23,4 +25,9 @@ async function updateQuestion(question) {
     }
     const newQuestion = await db.Question.findByIdAndUpdate(question._id, question, {new: true});
     return newQuestion;
+}
+
+async function deleteQuestion(id) {
+    const deleted = await db.Question.findByIdAndDelete({_id: id}).exec();
+    return 'User deleted';
 }

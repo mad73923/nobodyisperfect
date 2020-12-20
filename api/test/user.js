@@ -8,7 +8,7 @@ const { expect } = require('chai');
 let should = chai.should();
 
 const testUserCredentials = {
-    username: 'test',
+    username: 'testadmin',
     password: 'test'
 }
 

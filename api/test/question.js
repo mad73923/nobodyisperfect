@@ -8,7 +8,7 @@ const { expect } = require('chai');
 let should = chai.should();
 
 const testUserCredentials = {
-    username: 'test',
+    username: 'testadmin',
     password: 'test'
 };
 
@@ -24,6 +24,8 @@ describe('Question', () => {
     let token = '';
 
     before((done) => {
+        // clear database
+        Question.deleteMany({}).exec();
         chai.request(server)
             .post('/users/authenticate')
             .send(testUserCredentials)
@@ -60,6 +62,7 @@ describe('Question', () => {
             });
         });
     });
+
     describe('/PUT', () => {
         it('it should be possible to update a question', (done) => {
             addedQuestion.text = 'nonesense';
@@ -70,6 +73,31 @@ describe('Question', () => {
             .end((err, res) => {
                 //console.log(res);
                 res.body.text.should.equal('nonesense');
+                done();
+            });
+        });
+    });
+
+    describe('/DELETE', () => {
+        it('it should not be impossible to delete non-valid question ids', (done) => {
+            chai.request(server)
+            .delete(`/question/abcdef`)
+            .set({ Authorization: `Bearer ${token}` })
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(500);
+                done();
+            });
+        });
+    });
+
+    describe('/DELETE', () => {
+        it('it should be possible to delete a question by ID', (done) => {
+            chai.request(server)
+            .delete(`/question/${addedQuestion._id}`)
+            .set({ Authorization: `Bearer ${token}` })
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(200);
+                expect(res.body.message).to.equal('Question deleted');
                 done();
             });
         });
