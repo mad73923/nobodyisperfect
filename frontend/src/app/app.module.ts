@@ -15,7 +15,7 @@ import { AdminComponent } from './admin';
 import { LoginComponent } from './login';
 import { AddnewuserComponent } from './addnewuser/addnewuser.component';
 import { QuestionComponent } from './question/question.component';
-import { QuestionmanagementComponent } from './questionmanagement/questionmanagement.component';
+import { QuestionmanagementComponent } from './questionmanagement';
 @NgModule({
     imports: [
         BrowserModule,
@@ -27,11 +27,10 @@ import { QuestionmanagementComponent } from './questionmanagement/questionmanage
         AppComponent,
         HomeComponent,
         AdminComponent,
-        LoginComponent
-,
+        LoginComponent,
         AddnewuserComponent ,
         QuestionComponent ,
-        QuestionmanagementComponent  ],
+        QuestionmanagementComponent ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home';
 import { AdminComponent } from './admin';
 import { LoginComponent } from './login';
+import { QuestionmanagementComponent } from './questionmanagement';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
 
@@ -22,6 +23,10 @@ const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent
+    },
+    {
+        path: 'questions',
+        component: QuestionmanagementComponent
     },
 
     // otherwise redirect to home
