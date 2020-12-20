@@ -12,7 +12,8 @@ module.exports = {
     getAll,
     getById,
     getRefreshTokens,
-    addNewUser
+    addNewUser,
+    getUserNameById
 };
 
 async function authenticate({ username, password, ipAddress }) {
@@ -77,6 +78,11 @@ async function getAll() {
 async function getById(id) {
     const user = await getUser(id);
     return basicDetails(user);
+}
+
+async function getUserNameById(id) {
+    const user = await getUser(id);
+    return user.username;
 }
 
 async function getRefreshTokens(userId) {

@@ -16,6 +16,10 @@ export class UserService {
         return this.http.get<User>(`${environment.apiUrl}/users/${id}`);
     }
 
+    getUserNameById(id: number) {
+        return this.http.get<String>(`${environment.apiUrl}/users/username/${id}`);
+    }
+
     addNewUser(newUser: User){
         return this.http.post<any>(`${environment.apiUrl}/users/add`, newUser);
     }
