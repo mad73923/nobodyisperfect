@@ -34,4 +34,8 @@ export class QuestionEditComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  saveQuestion(): void {
+    console.log('save');
+  }
+
 }
