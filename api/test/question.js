@@ -169,5 +169,16 @@ describe('Question', () => {
                 done();
             });
         });
+
+        it('users shall be able to delete their own questions by ID', (done) => {
+            chai.request(server)
+            .delete(`/question/${addedQuestionUser._id}`)
+            .set(userToken)
+            .end((err, res) => {
+                //console.log(res.body);
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
+        });
     });
 });

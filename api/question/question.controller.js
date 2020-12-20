@@ -7,6 +7,7 @@ const { func } = require('@hapi/joi');
 
 router.post('/add', authorize(), addNewQuestion)
 router.get('/', authorize(Role.Admin), getAll)
+router.get('/:id', authorize(), getById)
 router.put('/', authorize(), updateQuestion)
 router.delete('/:id', authorize(), deleteQuestion)
 
@@ -27,6 +28,12 @@ function getAll(req, res, next) {
         .catch(next);
 }
 
+function getById(req, res, next) {
+    questionService.getById(req.params.id)
+        .then(data => res.json(data))
+        .catch(next);
+}
+
 function updateQuestion(req, res, next) {
     if(req.user.role !== Role.Admin)
     {
@@ -43,12 +50,15 @@ function updateQuestion(req, res, next) {
 }
 
 function deleteQuestion(req, res, next) {
-    if((req.user.role !== Role.Admin) &&
-        req.body.creator !== req.user.id) {
-            throw 'User not allowed to delete question';
-        }
-    questionService.deleteQuestion(req.params.id)
-        .then((data) => {
-            res.status(200).json({message: 'Question deleted'});})
+    questionService.getById(req.params.id)
+        .then(data => {
+            if((req.user.role !== Role.Admin) &&
+                !data.creator.equals(req.user.id)) {
+                    throw 'User not allowed to delete question';
+                }
+            questionService.deleteQuestion(req.params.id)
+            .then(data =>
+                res.status(200).json({message: 'Question deleted'}))
+        })
         .catch(next);
 }

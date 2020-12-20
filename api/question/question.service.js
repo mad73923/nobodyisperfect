@@ -4,6 +4,7 @@ const { func } = require('@hapi/joi');
 
 module.exports = {
     getAll,
+    getById,
     addNewQuestion,
     updateQuestion,
     deleteQuestion
@@ -11,6 +12,10 @@ module.exports = {
 
 async function getAll(){
     return await db.Question.find();
+}
+
+async function getById(id) {
+    return await db.Question.findById(id);
 }
 
 
