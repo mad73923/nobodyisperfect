@@ -7,8 +7,13 @@ let server = require('../server');
 const { expect } = require('chai');
 let should = chai.should();
 
-const testUserCredentials = {
+const testAdminCredentials = {
     username: 'testadmin',
+    password: 'test'
+};
+
+const testUserCredentials = {
+    username: 'testuser',
     password: 'test'
 };
 
@@ -21,43 +26,73 @@ chai.use(chaiHttp);
 
 
 describe('Question', () => {
-    let token = '';
+    let adminToken = {};
+    let userToken = {};
 
     before((done) => {
         // clear database
         Question.deleteMany({}).exec();
+        // auth admin
         chai.request(server)
             .post('/users/authenticate')
-            .send(testUserCredentials)
+            .send(testAdminCredentials)
             .end((err, res) => {
                 expect(res.statusCode).to.equal(200);
-                token = res.body.jwtToken;
-                done();
+                adminToken = { Authorization: `Bearer ${res.body.jwtToken}` };
             });
+        chai.request(server)
+        .post('/users/authenticate')
+        .send(testUserCredentials)
+        .end((err, res) => {
+            expect(res.statusCode).to.equal(200);
+            userToken = { Authorization: `Bearer ${res.body.jwtToken}` };
+            done();
+        });
     });
 
     describe('/GET', () =>{
         it('it should GET all the questions', (done) => {
             chai.request(server)
                 .get('/question')
-                .set({ Authorization: `Bearer ${token}` })
+                .set(adminToken)
                 .end((err, res) => {
                     res.should.have.status(200);
                     done();
                 });
         });
+        it('normal users should not get all questions', (done) =>{
+            chai.request(server)
+                .get('/question')
+                .set(userToken)
+                .end((err, res) => {
+                    res.should.have.status(401);
+                    done();
+                });
+        });
     });
 
-    let addedQuestion = {};
+    let addedQuestionAdmin = {};
+    let addedQuestionUser = {};
     describe('/POST', () => {
-        it('it should add a new question', (done) => {
+        it('it should add a new question as admin', (done) => {
             chai.request(server)
             .post('/question/add')
-            .set({ Authorization: `Bearer ${token}` })
+            .set(adminToken)
             .send(mockQuestion)
             .end((err, res) => {
                 expect(res.statusCode).to.equal(200);
-                addedQuestion = res.body;
+                addedQuestionAdmin = res.body;
+                done();
+            });
+        });
+        it('it should add a new question as user', (done) => {
+            chai.request(server)
+            .post('/question/add')
+            .set(userToken)
+            .send(mockQuestion)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(200);
+                addedQuestionUser = res.body;
                 done();
             });
         });
@@ -65,14 +100,49 @@ describe('Question', () => {
 
     describe('/PUT', () => {
         it('it should be possible to update a question', (done) => {
-            addedQuestion.text = 'nonesense';
+            addedQuestionAdmin.text = 'nonesense';
             chai.request(server)
             .put('/question')
-            .set({ Authorization: `Bearer ${token}` })
-            .send(addedQuestion)
+            .set(adminToken)
+            .send(addedQuestionAdmin)
             .end((err, res) => {
-                //console.log(res);
                 res.body.text.should.equal('nonesense');
+                done();
+            });
+        });
+        it('it should be possible for admins to update any question', (done) => {
+            addedQuestionUser.text = 'nonesense';
+            addedQuestionUser.accepted = true;
+            chai.request(server)
+            .put('/question')
+            .set(adminToken)
+            .send(addedQuestionUser)
+            .end((err, res) => {
+                res.body.text.should.equal('nonesense');
+                res.status.should.equal(200);
+                done();
+            });
+        });
+        it('normal users shall not be able to edit others questions', (done) => {
+            addedQuestionAdmin.text = 'more nonesense';
+            chai.request(server)
+            .put('/question')
+            .set(userToken)
+            .send(addedQuestionAdmin)
+            .end((err, res) => {
+                res.status.should.equal(400);
+                done();
+            });
+        });
+        it('when users change their question, it should should change its state to unaccepted', (done) => {
+            addedQuestionUser.text = 'even more nonesense';
+            chai.request(server)
+            .put('/question')
+            .set(userToken)
+            .send(addedQuestionUser)
+            .end((err, res) => {
+                res.status.should.equal(200);
+                res.body.accepted.should.equal(false);
                 done();
             });
         });
@@ -82,19 +152,17 @@ describe('Question', () => {
         it('it should not be impossible to delete non-valid question ids', (done) => {
             chai.request(server)
             .delete(`/question/abcdef`)
-            .set({ Authorization: `Bearer ${token}` })
+            .set(adminToken)
             .end((err, res) => {
                 expect(res.statusCode).to.equal(500);
                 done();
             });
         });
-    });
 
-    describe('/DELETE', () => {
         it('it should be possible to delete a question by ID', (done) => {
             chai.request(server)
-            .delete(`/question/${addedQuestion._id}`)
-            .set({ Authorization: `Bearer ${token}` })
+            .delete(`/question/${addedQuestionAdmin._id}`)
+            .set(adminToken)
             .end((err, res) => {
                 expect(res.statusCode).to.equal(200);
                 expect(res.body.message).to.equal('Question deleted');

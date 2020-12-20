@@ -15,8 +15,8 @@ async function createTestUser() {
             role: Role.Admin
         }
         await db.User(newUser).save();
-        user.newUser = 'testuser';
-        user.newUser = Role.User;
+        newUser.username = 'testuser';
+        newUser.role = Role.User;
         await db.User(newUser).save();
     }
 }
