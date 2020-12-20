@@ -10,12 +10,12 @@ const { func } = require('@hapi/joi');
 // routes
 router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/refresh-token', refreshToken);
-router.post('/revoke-token', authorize, revokeTokenSchema, revokeToken);
+router.post('/revoke-token', authorize(), revokeTokenSchema, revokeToken);
 router.post('/add', authorize(Role.Admin), addNewUser);
 router.get('/', authorize(Role.Admin), getAll);
-router.get('/:id', authorize, getById);
-router.get('/username/:id', authorize, getUserNameById);
-router.get('/:id/refresh-tokens', authorize, getRefreshTokens);
+router.get('/:id', authorize(), getById);
+router.get('/username/:id', authorize(), getUserNameById);
+router.get('/:id/refresh-tokens', authorize(), getRefreshTokens);
 
 module.exports = router;
 
