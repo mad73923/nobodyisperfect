@@ -159,6 +159,35 @@ describe('Question', () => {
             });
         });
 
+        it('users shall be not able to delete others questions by ID', (done) => {
+            chai.request(server)
+            .delete(`/question/${addedQuestionAdmin._id}`)
+            .set(userToken)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(400);
+                done();
+            });
+        });
+
+        it('admins should be able to delete others questions', (done) => {
+            // create additional question as user
+            chai.request(server)
+            .post('/question/add')
+            .set(userToken)
+            .send(mockQuestion)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(200);
+                extraQuestion = res.body;
+                chai.request(server)
+                .delete(`/question/${extraQuestion._id}`)
+                .set(adminToken)
+                .end((err, res) => {
+                    expect(res.statusCode).to.equal(200);
+                    done();
+                })
+            });
+        });
+
         it('it should be possible to delete a question by ID', (done) => {
             chai.request(server)
             .delete(`/question/${addedQuestionAdmin._id}`)
@@ -175,7 +204,6 @@ describe('Question', () => {
             .delete(`/question/${addedQuestionUser._id}`)
             .set(userToken)
             .end((err, res) => {
-                //console.log(res.body);
                 expect(res.statusCode).to.equal(200);
                 done();
             });
