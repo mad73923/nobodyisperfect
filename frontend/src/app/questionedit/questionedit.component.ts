@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 import { Question } from '../_models';
 import { AuthenticationService, UserService, QuestionService } from '../_services';
@@ -10,7 +11,7 @@ import { AuthenticationService, UserService, QuestionService } from '../_service
 })
 export class QuestionEditComponent implements OnInit {
 
-  @Input() question: Question;
+  question: Question;
   creatorUsername: String;
   heading: String;
   isNewQuestion: Boolean;
@@ -18,21 +19,38 @@ export class QuestionEditComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticationService,
               private userService: UserService,
-              private questionService: QuestionService) {
-    if(!this.question){
-      this.isNewQuestion = true;
-      this.question = new Question();
-      this.heading = 'New Question';
-      this.authenticationService.user.pipe(first()).subscribe(x => {
-        this.question.creator = x.id;
-        this.creatorUsername = x.username});
-    }else{
-      this.isNewQuestion = false;
-      this.heading = 'Edit Question';
-      this.userService.getUserNameById(this.question.creator).pipe(first()).subscribe(username => {
-        this.creatorUsername = username;
-      });
-    }
+              private questionService: QuestionService,
+              private route: ActivatedRoute) {
+    this.question = new Question();
+    this.route.queryParams.pipe(first()).subscribe(param => {
+      if(param.id){
+        // edit question
+        this.isNewQuestion = false;
+        this.heading = 'Edit Question';
+        this.questionService.getById(param.id).pipe(first()).subscribe(data => {
+          this.question = data;
+          this.userService.getUserNameById(this.question.creator).pipe(first()).subscribe(username => {
+            this.creatorUsername = username;
+          });
+        }, 
+        err => {
+          this.error = err;
+          this.createNewQuestion();
+        });
+      }else{
+        // new question
+        this.createNewQuestion();
+      }
+    });
+  }
+
+  createNewQuestion() : void {
+    this.isNewQuestion = true;
+    this.question = new Question();
+    this.heading = 'New Question';
+    this.authenticationService.user.pipe(first()).subscribe(x => {
+      this.question.creator = x.id;
+      this.creatorUsername = x.username});
   }
 
   ngOnInit(): void {

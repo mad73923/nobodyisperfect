@@ -18,6 +18,10 @@ export class QuestionService {
     return this.http.get<Question[]>(`${environment.apiUrl}/question/my`);
   }
 
+  getById(id: Number) {
+    return this.http.get<Question>(`${environment.apiUrl}/question/${id}`);
+  }
+
   addNewQuestion(question: Question) {
     return this.http.post<Question>(`${environment.apiUrl}/question/add`, question);
   }

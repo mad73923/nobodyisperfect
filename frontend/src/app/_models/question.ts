@@ -1,5 +1,5 @@
 export class Question {
-    id: number;
+    _id: Number;
     text: string;
     correctAnswer: string;
     creator: number;

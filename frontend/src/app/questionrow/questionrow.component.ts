@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Question, User , Role} from '@app/_models';
 import { QuestionService, AuthenticationService } from '@app/_services';
 import { first } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'tr[app-questionrow]',
@@ -11,7 +12,8 @@ import { first } from 'rxjs/operators';
 export class QuestionrowComponent implements OnInit {
 
   constructor(private questionService: QuestionService,
-    private authenticationService: AuthenticationService) { 
+    private authenticationService: AuthenticationService,
+    private router: Router) { 
     this.user = authenticationService.userValue;
   }
 
@@ -23,6 +25,11 @@ export class QuestionrowComponent implements OnInit {
 
   get isAdmin() {
     return this.user && this.user.role === Role.Admin;
+  }
+
+  editQuestion() {
+    console.log(this.question);
+    this.router.navigate(['/editquestion'], {queryParams: {id: this.question._id}});
   }
 
   setAccepted(accepted: Boolean): void {

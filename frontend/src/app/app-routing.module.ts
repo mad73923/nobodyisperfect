@@ -27,10 +27,12 @@ const routes: Routes = [
     },
     {
         path: 'questions',
+        canActivate: [AuthGuard],
         component: QuestionmanagementComponent
     },
     {
-        path: 'newquestion',
+        path: 'editquestion',
+        canActivate: [AuthGuard],
         component: QuestionEditComponent
     },
     // otherwise redirect to home

@@ -35,6 +35,7 @@ async function updateQuestion(question) {
     }
     // preserve some fields
     question.createdAt = oldQuestion.createdAt;
+    question.creator = oldQuestion.creator;
     const newQuestion = await db.Question.findByIdAndUpdate(question._id, question, {new: true});
     return newQuestion;
 }
