@@ -28,7 +28,6 @@ export class QuestionrowComponent implements OnInit {
   }
 
   editQuestion() {
-    console.log(this.question);
     this.router.navigate(['/editquestion'], {queryParams: {id: this.question._id}});
   }
 
