@@ -22,7 +22,7 @@ export class QuestionEditComponent implements OnInit {
       this.isNewQuestion = true;
       this.question = new Question();
       this.heading = 'New Question';
-      this.authenticationService.user.subscribe(x => {
+      this.authenticationService.user.pipe(first()).subscribe(x => {
         this.question.creator = x.id;
         this.creatorUsername = x.username});
     }else{
