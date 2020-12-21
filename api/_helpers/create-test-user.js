@@ -12,11 +12,11 @@ async function createTestUser() {
             lastName: 'User',
             username: 'testadmin',
             passwordHash: bcrypt.hashSync('test', 10),
-            role: Role.Admin
+            role: [Role.Admin]
         }
         await db.User(newUser).save();
         newUser.username = 'testuser';
-        newUser.role = Role.User;
+        newUser.role = [Role.User];
         await db.User(newUser).save();
     }
 }

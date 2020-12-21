@@ -19,7 +19,7 @@ export class QuestionmanagementComponent implements OnInit {
     }
 
   get isAdmin() {
-      return this.user && this.user.role === Role.Admin;
+      return this.user && this.user.role.includes(Role.Admin);
   }
 
   ngOnInit(): void {

@@ -18,8 +18,7 @@ function authorize(roles = []) {
         // authorize based on user role
         async (req, res, next) => {
             const user = await db.User.findById(req.user.id);
-
-            if (!user || (roles.length && !roles.includes(user.role))) {
+            if (!user || (roles.length && !hasValidRole(roles, user.role))) {
                 // user no longer exists or role not authorized
                 return res.status(401).json({ message: 'Unauthorized' });
             }
@@ -31,4 +30,13 @@ function authorize(roles = []) {
             next();
         }
     ];
+}
+
+function hasValidRole (allowedRoles, userRoles) {
+    for(allowed of allowedRoles){
+        if(userRoles.includes(allowed)){
+                return true;
+            }
+    }
+    return false;
 }

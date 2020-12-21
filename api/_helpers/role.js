@@ -1,4 +1,5 @@
 module.exports = {
-    Admin: 'Admin',
-    User: 'User'
+    Admin: "Admin",
+    User: "User",
+    GameMaster: "GameMaster"
 }

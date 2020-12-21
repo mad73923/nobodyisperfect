@@ -24,7 +24,7 @@ export class QuestionrowComponent implements OnInit {
   }
 
   get isAdmin() {
-    return this.user && this.user.role === Role.Admin;
+    return this.user && this.user.role.includes(Role.Admin);
   }
 
   editQuestion() {

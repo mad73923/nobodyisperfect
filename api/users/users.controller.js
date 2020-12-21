@@ -98,7 +98,7 @@ function getUserNameById(req, res, next) {
 
 function addNewUser(req, res, next) {
     // only allowed for admins
-    if (req.user.role !== Role.Admin) {
+    if (!req.user.role.includes(Role.Admin)) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
     userService.addNewUser(req.body)
@@ -108,7 +108,7 @@ function addNewUser(req, res, next) {
 
 function getRefreshTokens(req, res, next) {
     // users can get their own refresh tokens and admins can get any user's refresh tokens
-    if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
+    if (req.params.id !== req.user.id && !req.user.role.includes(Role.Admin)) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 

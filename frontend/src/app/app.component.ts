@@ -13,7 +13,7 @@ export class AppComponent {
     }
 
     get isAdmin() {
-        return this.user && this.user.role === Role.Admin;
+        return this.user && this.user.role.includes(Role.Admin);
     }
 
     logout() {

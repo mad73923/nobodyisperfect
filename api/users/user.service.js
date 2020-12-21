@@ -105,7 +105,7 @@ async function addNewUser(user) {
         lastName: user.lastName,
         username: user.username,
         passwordHash: bcrypt.hashSync(user.password, 10),
-        role: role.User
+        role: [role.User]
     });
 
     await newUser.save();

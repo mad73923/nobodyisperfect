@@ -42,7 +42,7 @@ function getById(req, res, next) {
 }
 
 function updateQuestion(req, res, next) {
-    if(req.user.role !== Role.Admin)
+    if(!req.user.role.includes(Role.Admin))
     {
         req.body.accepted = false;
         // if not admin, dont allow changes of
@@ -59,7 +59,7 @@ function updateQuestion(req, res, next) {
 function deleteQuestion(req, res, next) {
     questionService.getById(req.params.id)
         .then(data => {
-            if((req.user.role !== Role.Admin) &&
+            if((!req.user.role.includes(Role.Admin)) &&
                 !data.creator.equals(req.user.id)) {
                     throw 'User not allowed to delete question';
                 }
