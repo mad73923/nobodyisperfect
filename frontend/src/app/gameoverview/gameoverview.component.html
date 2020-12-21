@@ -1,1 +1,4 @@
 <p>gameoverview works!</p>
+<div *ngIf="games">
+    <app-gamecard *ngFor="let game of games" [game]="game"></app-gamecard>
+</div>

@@ -1,1 +1,6 @@
-<p>gamecard works!</p>
+<div class="card mt-4" *ngIf="game">
+    <h4 class="card-header">{{game.name}}</h4>
+    <div class="card-body">
+        {{game.gameMaster}}
+    </div>
+</div>
