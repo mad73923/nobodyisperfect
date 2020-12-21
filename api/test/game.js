@@ -110,7 +110,18 @@ describe('Game', () => {
                 expect(res.statusCode).to.equal(200);
                 done();
             });
-        })
+        });
+        it('users may NOT modify the game state', (done) => {
+            gameGame.currentState = state.Finished;
+            chai.request(server)
+            .put('/game')
+            .set(userToken)
+            .send(gameGame)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(401);
+                done();
+            });
+        });
     });
 
     describe('/GET', () => {
@@ -139,6 +150,15 @@ describe('Game', () => {
             .end((err, res) => {
                 expect(res.body.map(x => x._id).includes(gameGame._id)).to.equal(true);
                 expect(res.body.map(x => x._id).includes(adminGame._id)).to.equal(true);
+                done();
+            });
+        });
+        it('user get games in every state by Id', (done) => {
+            chai.request(server)
+            .get(`/game/${gameGame._id}`)
+            .set(userToken)
+            .end((err, res) => {
+                expect(res.status).to.equal(200);
                 done();
             });
         });
