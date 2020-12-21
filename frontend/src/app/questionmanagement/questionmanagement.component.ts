@@ -13,7 +13,7 @@ export class QuestionmanagementComponent implements OnInit {
   allQuestions: Question[];
 
   constructor(private questionService: QuestionService,
-    private authService: AuthenticationService) { 
+    public authService: AuthenticationService) {
       this.myQuestions = [];
       this.allQuestions = [];
     }

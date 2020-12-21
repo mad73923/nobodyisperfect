@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class QuestionrowComponent implements OnInit {
 
   constructor(private questionService: QuestionService,
-    private authService: AuthenticationService,
+    public authService: AuthenticationService,
     private router: Router) { 
   }
 

@@ -18,5 +18,8 @@ async function createTestUser() {
         newUser.username = 'testuser';
         newUser.role = [Role.User];
         await db.User(newUser).save();
+        newUser.username = 'testgame';
+        newUser.role = [Role.GameMaster];
+        await db.User(newUser).save();
     }
 }

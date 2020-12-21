@@ -21,6 +21,9 @@ app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: 
 app.use('/users', require('./users/users.controller'));
 // question routes
 app.use('/question', require('./question/question.controller'))
+// game routes
+app.use('/game', require('./game/game.controller'))
+
 
 // swagger docs route
 app.use('/api-docs', require('_helpers/swagger'));

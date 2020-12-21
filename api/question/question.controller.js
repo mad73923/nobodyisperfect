@@ -44,9 +44,12 @@ function getById(req, res, next) {
 function updateQuestion(req, res, next) {
     if(!req.user.role.includes(Role.Admin))
     {
+        // if normal user changes question,
+        // it has to be checked again.
         req.body.accepted = false;
         // if not admin, dont allow changes of
         // questions from other creators
+        // TODO this has to be made more secure
         if(req.user.id !== req.body.creator) {
             throw 'User not allowed to change others questions';
         }

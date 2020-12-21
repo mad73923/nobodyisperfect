@@ -42,5 +42,5 @@ async function updateQuestion(question) {
 
 async function deleteQuestion(id) {
     const deleted = await db.Question.findByIdAndDelete({_id: id}).exec();
-    return 'User deleted';
+    return 'Question deleted';
 }
