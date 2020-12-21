@@ -11,24 +11,18 @@ export class QuestionmanagementComponent implements OnInit {
 
   myQuestions: Question[];
   allQuestions: Question[];
-  user: User;
 
   constructor(private questionService: QuestionService,
-    private authenticationService: AuthenticationService) { 
-      this.user = authenticationService.userValue;
+    private authService: AuthenticationService) { 
       this.myQuestions = [];
       this.allQuestions = [];
     }
-
-  get isAdmin() {
-      return this.user && this.user.role.includes(Role.Admin);
-  }
 
   ngOnInit(): void {
     this.questionService.getMy().pipe(first()).subscribe(x => {
       this.myQuestions = x
     });
-    if(this.isAdmin){
+    if(this.authService.isAdmin){
       this.questionService.getAll().pipe(first()).subscribe(x => {
         this.allQuestions = x});
     }

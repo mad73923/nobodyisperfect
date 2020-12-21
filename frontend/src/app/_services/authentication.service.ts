@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { User } from '@app/_models';
+import { User, Role } from '@app/_models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -22,6 +22,10 @@ export class AuthenticationService {
 
     public get userValue(): User {
         return this.userSubject.value;
+    }
+
+    get isAdmin() {
+        return this.userValue && this.userValue.role.includes(Role.Admin);
     }
 
     login(username: string, password: string) {

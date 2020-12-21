@@ -12,19 +12,13 @@ import { Router } from '@angular/router';
 export class QuestionrowComponent implements OnInit {
 
   constructor(private questionService: QuestionService,
-    private authenticationService: AuthenticationService,
+    private authService: AuthenticationService,
     private router: Router) { 
-    this.user = authenticationService.userValue;
   }
 
   @Input() question: Question;
-  user: User;
 
   ngOnInit(): void {
-  }
-
-  get isAdmin() {
-    return this.user && this.user.role.includes(Role.Admin);
   }
 
   editQuestion() {

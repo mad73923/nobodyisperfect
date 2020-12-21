@@ -1,5 +1,5 @@
 <td>{{question.text}}</td>
 <td>{{question.correctAnswer}}</td>
 <td>{{question.accepted}}</td>
-<td><button type="button" class="btn btn-primary btn-sm" *ngIf="!question.accepted && isAdmin" (click)="setAccepted(true)">Accept</button>
+<td><button type="button" class="btn btn-primary btn-sm" *ngIf="!question.accepted && authService.isAdmin" (click)="setAccepted(true)">Accept</button>
 <button type="button" class="btn btn-warning btn-sm" (click)="editQuestion()">Edit</button></td>
