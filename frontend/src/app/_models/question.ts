@@ -3,7 +3,7 @@ export class Question {
     text: string;
     correctAnswer: string;
     creator: number;
-    createdAt: string;
+    createdAt: Date;
     accepted: boolean;
     imagePath: string;
 }

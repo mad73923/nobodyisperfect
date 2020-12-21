@@ -15,10 +15,10 @@ export class QuestionService {
   }
 
   addNewQuestion(question: Question) {
-    return this.http.post<any>(`${environment.apiUrl}/question/add`, question);
+    return this.http.post<Question>(`${environment.apiUrl}/question/add`, question);
   }
 
   updateQuestion(question: Question) {
-    return this.http.put<any>(`${environment.apiUrl}/question`, question);
+    return this.http.put<Question>(`${environment.apiUrl}/question`, question);
   }
 }

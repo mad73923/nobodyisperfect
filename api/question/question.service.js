@@ -24,10 +24,12 @@ async function addNewQuestion(question){
 }
 
 async function updateQuestion(question) {
-    let updatedQuestion = await db.Question.findOne({_id: question._id});
-    if(!updatedQuestion) {
+    let oldQuestion = await db.Question.findOne({_id: question._id});
+    if(!oldQuestion) {
         throw 'Question ID not found';
     }
+    // preserve some fields
+    question.createdAt = oldQuestion.createdAt;
     const newQuestion = await db.Question.findByIdAndUpdate(question._id, question, {new: true});
     return newQuestion;
 }

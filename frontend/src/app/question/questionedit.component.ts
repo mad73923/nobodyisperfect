@@ -39,16 +39,22 @@ export class QuestionEditComponent implements OnInit {
 
   saveQuestion(): void {
     if(this.isNewQuestion){
-      this.questionService.addNewQuestion(this.question).pipe(first()).subscribe(data => {console.log(data);
-      this.question = data});
-      this.isNewQuestion = false;
+      this.questionService.addNewQuestion(this.question).pipe(first()).subscribe(data => {
+        this.question = data
+        this.isNewQuestion = false;
+        this.heading = 'Edit Question';
+      }, 
+      err => {
+        console.log(err);
+      });
     }else{
       this.questionService.updateQuestion(this.question).pipe(first())
       .subscribe(data => {
-        console.log(data);
-        this.question = data;
+          this.question = data;
+      }, 
+      err => {
+        console.log(err);
       });
     }
   }
-
 }
