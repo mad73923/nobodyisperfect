@@ -1,11 +1,10 @@
-const User = require('../users/user.model');
-const Question = require('../question/question.model');
-
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../server');
 const { expect } = require('chai');
 let should = chai.should();
+
+const state = require('../_helpers/gameState');
 
 chai.use(chaiHttp);
 
@@ -60,6 +59,9 @@ describe('Game', () => {
         });
     });
 
+    let adminGame = {};
+    let gameGame = {};
+
     describe('/POST', () => {
         it('it should add a new game as admin', (done) => {
             chai.request(server)
@@ -68,7 +70,7 @@ describe('Game', () => {
             .send(mockGame)
             .end((err, res) => {
                 expect(res.statusCode).to.equal(200);
-                addedQuestionAdmin = res.body;
+                adminGame = res.body;
                 done();
             });
         });
@@ -80,7 +82,7 @@ describe('Game', () => {
             .send(mockGame)
             .end((err, res) => {
                 expect(res.statusCode).to.equal(200);
-                addedQuestionAdmin = res.body;
+                gameGame = res.body;
                 done();
             });
         });
@@ -92,7 +94,51 @@ describe('Game', () => {
             .send(mockGame)
             .end((err, res) => {
                 expect(res.statusCode).to.equal(401);
-                addedQuestionAdmin = res.body;
+                done();
+            });
+        });
+    });
+
+    describe('/PUT', () => {
+        it('modify the game state', (done) => {
+            gameGame.currentState = state.Running;
+            chai.request(server)
+            .put('/game')
+            .set(gameToken)
+            .send(gameGame)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
+        })
+    });
+
+    describe('/GET', () => {
+        it('get games as user', (done) => {
+            chai.request(server)
+            .get('/game')
+            .set(userToken)
+            .end((err, res) => {
+                expect(res.body.map(x => x._id).includes(adminGame._id)).to.equal(true);
+                done();
+            });
+        });
+        it('dont get games which are running', (done) => {
+            chai.request(server)
+            .get('/game')
+            .set(userToken)
+            .end((err, res) => {
+                expect(res.body.map(x => x._id).includes(gameGame._id)).to.equal(false);
+                done();
+            });
+        });
+        it('as master get all games in every state', (done) => {
+            chai.request(server)
+            .get('/game')
+            .set(gameToken)
+            .end((err, res) => {
+                expect(res.body.map(x => x._id).includes(gameGame._id)).to.equal(true);
+                expect(res.body.map(x => x._id).includes(adminGame._id)).to.equal(true);
                 done();
             });
         });
