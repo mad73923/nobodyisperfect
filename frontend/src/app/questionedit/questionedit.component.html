@@ -9,4 +9,5 @@
         <textarea class="form-control" id="validationTextarea" placeholder="Your answer goes here..." [(ngModel)]="question.correctAnswer"></textarea>
     </div>
     <p class="text-right mx-3"><button type="button" class="btn btn-primary btn-lg" (click)="saveQuestion()">Save</button></p>
+    <div *ngIf="error" class="alert alert-danger mx-3 my-0">{{error}}</div>
 </div>

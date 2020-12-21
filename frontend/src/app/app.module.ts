@@ -15,7 +15,7 @@ import { HomeComponent } from './home';
 import { AdminComponent } from './admin';
 import { LoginComponent } from './login';
 import { AddnewuserComponent } from './addnewuser/addnewuser.component';
-import { QuestionEditComponent } from './question';
+import { QuestionEditComponent } from './questionedit';
 import { QuestionmanagementComponent } from './questionmanagement';
 @NgModule({
     imports: [

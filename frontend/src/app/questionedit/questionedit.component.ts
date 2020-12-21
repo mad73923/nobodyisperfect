@@ -14,6 +14,7 @@ export class QuestionEditComponent implements OnInit {
   creatorUsername: String;
   heading: String;
   isNewQuestion: Boolean;
+  error: String;
 
   constructor(private authenticationService: AuthenticationService,
               private userService: UserService,
@@ -43,17 +44,19 @@ export class QuestionEditComponent implements OnInit {
         this.question = data
         this.isNewQuestion = false;
         this.heading = 'Edit Question';
+        this.error = '';
       }, 
       err => {
-        console.log(err);
+        this.error = err;
       });
     }else{
       this.questionService.updateQuestion(this.question).pipe(first())
       .subscribe(data => {
           this.question = data;
+          this.error = '';
       }, 
       err => {
-        console.log(err);
+        this.error = err;
       });
     }
   }

@@ -5,7 +5,7 @@ import { HomeComponent } from './home';
 import { AdminComponent } from './admin';
 import { LoginComponent } from './login';
 import { QuestionmanagementComponent } from './questionmanagement';
-import { QuestionEditComponent } from './question';
+import { QuestionEditComponent } from './questionedit';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
 
