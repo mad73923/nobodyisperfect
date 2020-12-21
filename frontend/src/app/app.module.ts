@@ -18,7 +18,7 @@ import { AddnewuserComponent } from './addnewuser/addnewuser.component';
 import { QuestionEditComponent } from './questionedit';
 import { QuestionmanagementComponent } from './questionmanagement';
 import { QuestiontableComponent } from './questiontable/questiontable.component';
-import { QuestionrowComponent } from './questionrow/questionrow.component';
+import { QuestionrowComponent } from './questiontable/questionrow/questionrow.component';
 
 @NgModule({
     imports: [

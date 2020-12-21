@@ -134,7 +134,7 @@ describe('Game', () => {
                 done();
             });
         });
-        it('dont get games which are running', (done) => {
+        it('as user: dont get games which are running', (done) => {
             chai.request(server)
             .get('/game')
             .set(userToken)
@@ -176,7 +176,6 @@ describe('Game', () => {
             });
         });
         it('masters may not delete games from others', (done) => {
-            gameGame.currentState = state.Running;
             chai.request(server)
             .delete(`/game/${adminGame._id}`)
             .set(gameToken)
@@ -186,7 +185,6 @@ describe('Game', () => {
             });
         });
         it('masters may delete their own games', (done) => {
-            gameGame.currentState = state.Running;
             chai.request(server)
             .delete(`/game/${gameGame._id}`)
             .set(gameToken)
@@ -196,7 +194,6 @@ describe('Game', () => {
             });
         });
         it('admin delete games', (done) => {
-            gameGame.currentState = state.Running;
             chai.request(server)
             .delete(`/game/${adminGame._id}`)
             .set(adminToken)

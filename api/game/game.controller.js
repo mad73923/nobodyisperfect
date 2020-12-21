@@ -34,6 +34,7 @@ function getAllOrPossibleToRegister(req, res, next) {
 }
 
 function getById(req, res, next) {
+    // TODO only if user is in players
     gameService.getById(req.params.id)
         .then(data => res.json(data))
         .catch(next);
