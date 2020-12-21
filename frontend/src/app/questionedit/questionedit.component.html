@@ -5,7 +5,9 @@
         <textarea type="text" class="form-control" id="workout-name" placeholder="Your question goes here..." [(ngModel)]="question.text"></textarea>
     <h4 class="my-3">Answer</h4>
         <textarea class="form-control" id="validationTextarea" placeholder="Your answer goes here..." [(ngModel)]="question.correctAnswer"></textarea>
-    <p class="text-right my-3"><button type="button" class="btn btn-primary btn-lg" (click)="saveQuestion()">Save</button></p>
+    <p class="text-right my-3">
+        <button type="button" [ngClass]="changesSaved?'btn-success': error?'btn-danger': 'btn-primary'" class="btn btn-lg" (click)="saveQuestion()"><span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>Save</button>
+    </p>
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
 </div>
 </div>

@@ -16,12 +16,16 @@ export class QuestionEditComponent implements OnInit {
   heading: String;
   isNewQuestion: Boolean;
   error: String;
+  changesSaved: Boolean;
+  loading: Boolean;
 
   constructor(private authenticationService: AuthenticationService,
               private userService: UserService,
               private questionService: QuestionService,
               private route: ActivatedRoute) {
     this.question = new Question();
+    this.changesSaved = false;
+    this.loading = false;
     this.route.queryParams.pipe(first()).subscribe(param => {
       if(param.id){
         // edit question
@@ -57,25 +61,36 @@ export class QuestionEditComponent implements OnInit {
   }
 
   saveQuestion(): void {
+    this.loading = true;
+    this.changesSaved = false;
     if(this.isNewQuestion){
       this.questionService.addNewQuestion(this.question).pipe(first()).subscribe(data => {
         this.question = data
         this.isNewQuestion = false;
         this.heading = 'Edit Question';
         this.error = '';
+        this.changesSaved = true;
+        this.loading = false;
       }, 
       err => {
-        this.error = err;
+        this.onSavingError(err);
       });
     }else{
       this.questionService.updateQuestion(this.question).pipe(first())
       .subscribe(data => {
           this.question = data;
           this.error = '';
+          this.changesSaved = true;
+          this.loading = false;
       }, 
       err => {
-        this.error = err;
+        this.onSavingError(err);
       });
     }
+  }
+
+  onSavingError(err: String): void {
+    this.error = err;
+    this.loading = false;
   }
 }
