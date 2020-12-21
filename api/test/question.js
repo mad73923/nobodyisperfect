@@ -94,6 +94,17 @@ describe('Question', () => {
                 done();
             });
         });
+
+        it('normal users should get their own questions', (done) =>{
+            chai.request(server)
+                .get('/question/my')
+                .set(userToken)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.an('array');
+                    done();
+                });
+        });
     });
 
     describe('/PUT', () => {

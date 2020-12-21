@@ -9,4 +9,8 @@
     <h3>My questions</h3>
     <app-questiontable [questions]="myQuestions"></app-questiontable>
     </div>
+    <div class="mx-4" *ngIf="isAdmin">
+    <h3>All questions</h3>
+    <app-questiontable [questions]="allQuestions"></app-questiontable>
+    </div>
 </div>
