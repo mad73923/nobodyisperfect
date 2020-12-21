@@ -7,9 +7,7 @@
     </thead>
     <tbody>
         <tr *ngIf="!questions"><td>No questions yet</td><td></td></tr>
-        <tr *ngFor="let question of questions">
-            <td>{{question.text}}</td>
-            <td>{{question.correctAnswer}}</td>
+        <tr app-questionrow *ngFor="let question of questions" [question]="question">
         </tr>
     </tbody>
   </table>
