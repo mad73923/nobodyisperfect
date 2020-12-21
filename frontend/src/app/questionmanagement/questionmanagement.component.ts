@@ -16,6 +16,8 @@ export class QuestionmanagementComponent implements OnInit {
   constructor(private questionService: QuestionService,
     private authenticationService: AuthenticationService) { 
       this.user = authenticationService.userValue;
+      this.myQuestions = [];
+      this.allQuestions = [];
     }
 
   get isAdmin() {
