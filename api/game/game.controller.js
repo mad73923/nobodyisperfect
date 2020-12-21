@@ -55,13 +55,13 @@ function updateGame(req, res, next) {
 }
 
 function deleteGame(req, res, next) {
-    questionService.getById(req.params.id)
+    gameService.getById(req.params.id)
         .then(data => {
             if((!req.user.role.includes(Role.Admin)) &&
                 !data.gameMaster.equals(req.user.id)) {
                     throw 'User not allowed to delete question';
                 }
-            questionService.deleteQuestion(req.params.id)
+            gameService.deleteGame(req.params.id)
             .then(data =>
                 res.status(200).json({message: 'Question deleted'}))
         })

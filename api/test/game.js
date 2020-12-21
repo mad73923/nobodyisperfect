@@ -163,4 +163,47 @@ describe('Game', () => {
             });
         });
     });
+
+    describe('/DELETE', () => {
+        it('users may NOT delete a game ', (done) => {
+            gameGame.currentState = state.Finished;
+            chai.request(server)
+            .delete(`/game/${gameGame._id}`)
+            .set(userToken)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(401);
+                done();
+            });
+        });
+        it('masters may not delete games from others', (done) => {
+            gameGame.currentState = state.Running;
+            chai.request(server)
+            .delete(`/game/${adminGame._id}`)
+            .set(gameToken)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(400);
+                done();
+            });
+        });
+        it('masters may delete their own games', (done) => {
+            gameGame.currentState = state.Running;
+            chai.request(server)
+            .delete(`/game/${gameGame._id}`)
+            .set(gameToken)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
+        });
+        it('admin delete games', (done) => {
+            gameGame.currentState = state.Running;
+            chai.request(server)
+            .delete(`/game/${adminGame._id}`)
+            .set(adminToken)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
+        });
+    });
 });
