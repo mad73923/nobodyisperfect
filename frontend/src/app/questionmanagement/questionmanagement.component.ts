@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Question } from '@app/_models';
+import { QuestionService } from '@app/_services';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-questionmanagement',
@@ -6,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class QuestionmanagementComponent implements OnInit {
 
-  constructor() { }
+  constructor(private questionService: QuestionService) { }
+
+  myQuestions: Question[];
 
   ngOnInit(): void {
+    this.questionService.getMy().pipe(first()).subscribe(x => {
+      this.myQuestions = x
+    });
   }
 
 }

@@ -7,6 +7,7 @@ const { func } = require('@hapi/joi');
 
 router.post('/add', authorize(), addNewQuestion)
 router.get('/', authorize(Role.Admin), getAll)
+router.get('/my', authorize(), getMy)
 router.get('/:id', authorize(), getById)
 router.put('/', authorize(), updateQuestion)
 router.delete('/:id', authorize(), deleteQuestion)
@@ -24,6 +25,12 @@ function addNewQuestion(req, res, next) {
 
 function getAll(req, res, next) {
     questionService.getAll()
+        .then(data => res.json(data))
+        .catch(next);
+}
+
+function getMy(req, res, next) {
+    questionService.getMy(req.user.id)
         .then(data => res.json(data))
         .catch(next);
 }

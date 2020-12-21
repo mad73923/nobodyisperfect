@@ -7,11 +7,16 @@ module.exports = {
     getById,
     addNewQuestion,
     updateQuestion,
-    deleteQuestion
+    deleteQuestion,
+    getMy
 }
 
 async function getAll(){
     return await db.Question.find();
+}
+
+async function getMy(userid) {
+    return await db.Question.find({creator: userid});
 }
 
 async function getById(id) {

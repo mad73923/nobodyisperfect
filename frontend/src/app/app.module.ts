@@ -17,6 +17,8 @@ import { LoginComponent } from './login';
 import { AddnewuserComponent } from './addnewuser/addnewuser.component';
 import { QuestionEditComponent } from './questionedit';
 import { QuestionmanagementComponent } from './questionmanagement';
+import { QuestiontableComponent } from './questiontable/questiontable.component';
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -32,7 +34,9 @@ import { QuestionmanagementComponent } from './questionmanagement';
         LoginComponent,
         AddnewuserComponent ,
         QuestionEditComponent ,
-        QuestionmanagementComponent ],
+        QuestionmanagementComponent ,
+        QuestiontableComponent
+    ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

@@ -1,0 +1,15 @@
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Question</th>
+        <th scope="col">Answer</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf="!questions"><td>No questions yet</td><td></td></tr>
+        <tr *ngFor="let question of questions">
+            <td>{{question.text}}</td>
+            <td>{{question.correctAnswer}}</td>
+        </tr>
+    </tbody>
+  </table>

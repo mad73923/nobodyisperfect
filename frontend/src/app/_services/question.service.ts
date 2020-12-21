@@ -14,6 +14,10 @@ export class QuestionService {
     return this.http.get<Question[]>(`${environment.apiUrl}/question`);
   }
 
+  getMy() {
+    return this.http.get<Question[]>(`${environment.apiUrl}/question/my`);
+  }
+
   addNewQuestion(question: Question) {
     return this.http.post<Question>(`${environment.apiUrl}/question/add`, question);
   }
