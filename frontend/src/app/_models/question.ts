@@ -4,6 +4,6 @@ export class Question {
     correctAnswer: string;
     creator: number;
     createdAt: Date;
-    accepted: boolean;
+    accepted: Boolean;
     imagePath: string;
 }
