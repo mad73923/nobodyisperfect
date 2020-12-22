@@ -1,7 +1,9 @@
+import { User } from './user';
+
 export class Game {
     _id: Number;
     name: string;
-    gameMaster: Number;
+    gameMaster: User;
     createdAt: Date;
     players: Number[];
     currentQuestion: Number;

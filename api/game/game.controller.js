@@ -24,7 +24,7 @@ function addNewGame(req, res, next) {
 function getAllOrPossibleToRegister(req, res, next) {
     if(req.user.role.includes(Role.Admin) || req.user.role.includes(Role.GameMaster)) {
         gameService.getAll()
-            .then(data => res.json(data))
+            .then(data => {res.json(data)})
             .catch(next);
     }else{
         gameService.getAllCanRegister()

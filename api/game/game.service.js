@@ -11,7 +11,7 @@ module.exports = {
 }
 
 async function getAll(){
-    return await db.Game.find();
+    return await db.Game.aggregate([{$lookup: {from: "users", localField: "gameMaster", foreignField:"_id", as:"gameMaster"}}, {$unwind: "$gameMaster"}, filterCriticalData]);
 }
 
 async function getAllCanRegister() {
@@ -41,3 +41,7 @@ async function deleteGame(id) {
     const deleted = await db.Game.findByIdAndDelete({_id: id}).exec();
     return 'Game deleted';
 }
+
+const filterCriticalData = {
+    $unset: ["gameMaster.passwordHash", "gameMaster.firstName", "gameMaster.lastName", "gameMaster.role"]
+};
