@@ -15,7 +15,7 @@ async function getAll(){
 }
 
 async function getAllCanRegister() {
-    return await db.Game.find({currentState: state.Register});
+    return await db.Game.aggregate([{$match: {currentState: state.Register}}, {$lookup: {from: "users", localField: "gameMaster", foreignField:"_id", as:"gameMaster"}}, {$unwind: "$gameMaster"}, filterCriticalData]);
 }
 
 async function getById(id) {
