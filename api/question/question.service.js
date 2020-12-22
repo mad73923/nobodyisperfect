@@ -13,11 +13,11 @@ module.exports = {
 }
 
 async function getAll(){
-    return await db.Question.find();
+    return await db.Question.aggregate([{$lookup: {from: "users", localField: "creator", foreignField:"_id", as:"creator"}}, {$unwind: "$creator"}, filterCriticalData]);
 }
 
 async function getMy(userid) {
-    return await db.Question.find({creator: userid});
+    return await db.Question.aggregate([{$match: {creator: ObjectId(userid)}}, {$lookup: {from: "users", localField: "creator", foreignField:"_id", as:"creator"}}, {$unwind: "$creator"}, filterCriticalData]);
 }
 
 async function getById(id) {
