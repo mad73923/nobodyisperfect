@@ -1,0 +1,1 @@
+db.questions.aggregate([{$lookup: {from: "users", localField: "creator", foreignField:"_id", as:"creator"}}, {$unwind: "$creator"}, {$unset: ["creator.passwordHash", "creator.firstName", "creator.lastName", "creator.role"]}])

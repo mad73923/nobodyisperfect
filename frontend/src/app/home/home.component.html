@@ -2,7 +2,15 @@
     <h4 class="card-header">Home</h4>
     <div class="card-body">
         <p>Hi, <strong *ngIf="userFromApi">{{userFromApi.username}}</strong>! Welcome to Nobody is perfect.</p>
-
+        <div *ngIf="authService.isAdmin || authService.isGameMaster">
+            <h3>New Game</h3>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Game name" [(ngModel)]="newGame.name">
+                <div class="input-group-prepend">
+                    <button [ngClass]="saveSucces?'btn-success': 'btn-outline-secondary'" class="btn" type="button" id="button-addon1" (click)="createNewGame()">Start</button>
+                  </div>
+              </div>
+        </div>
         <div>
             <app-gameoverview></app-gameoverview>
         </div>

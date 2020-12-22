@@ -28,6 +28,10 @@ export class AuthenticationService {
         return this.userValue && this.userValue.role.includes(Role.Admin);
     }
 
+    get isGameMaster() {
+        return this.userValue && this.userValue.role.includes(Role.GameMaster);
+    }
+
     login(username: string, password: string) {
         return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password })
             .pipe(map(user => {
