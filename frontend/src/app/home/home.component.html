@@ -7,12 +7,13 @@
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="Game name" [(ngModel)]="newGame.name">
                 <div class="input-group-prepend">
-                    <button [ngClass]="saveSucces?'btn-success': 'btn-outline-secondary'" class="btn" type="button" id="button-addon1" (click)="createNewGame()">Start</button>
+                    <button [ngClass]="saveSucces?'btn-success': error? 'btn-danger':'btn-outline-secondary'" class="btn" type="button" id="button-addon1" (click)="createNewGame()">Start</button>
                   </div>
-              </div>
         </div>
-        <div>
-            <app-gameoverview></app-gameoverview>
-        </div>
+        <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
+    </div>
+    <div>
+        <app-gameoverview></app-gameoverview>
+    </div>
     </div>
 </div>

@@ -14,6 +14,7 @@ export class HomeComponent {
     newGame: Game;
 
     saveSucces: Boolean;
+    error: String;
 
     constructor(
         private userService: UserService,
@@ -23,6 +24,7 @@ export class HomeComponent {
         this.user = this.authService.userValue;
         this.newGame = new Game();
         this.saveSucces = false;
+        this.error = '';
     }
 
     ngOnInit() {
@@ -40,6 +42,8 @@ export class HomeComponent {
             setTimeout(() => this.saveSucces = false, 2000);
         },
         err => {
+            this.error = err;
+            setTimeout(() => this.error = '', 3000);
         });
     }
 }
