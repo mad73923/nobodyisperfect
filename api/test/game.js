@@ -122,6 +122,19 @@ describe('Game', () => {
                 done();
             });
         });
+
+        it('users should be able to join game', (done) => {
+            chai.request(server)
+            .put(`/game/join/${gameGame._id}`)
+            .set(userToken)
+            .send(gameGame)
+            .end((err, res) => {
+                expect(res.statusCode).to.equal(200);
+                done();
+            });
+        });
+
+        it('users should be able to join ONLY ONE game');
     });
 
     describe('/GET', () => {

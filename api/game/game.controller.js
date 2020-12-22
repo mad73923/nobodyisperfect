@@ -9,6 +9,7 @@ router.post('/', authorize([Role.Admin, Role.GameMaster]), addNewGame)
 router.get('/', authorize(), getAllOrPossibleToRegister)
 router.get('/:id', authorize(), getById)
 router.put('/', authorize([Role.Admin, Role.GameMaster]), updateGame)
+router.put('/join/:id', authorize(), joinGame),
 router.delete('/:id', authorize([Role.Admin, Role.GameMaster]), deleteGame)
 
 module.exports = router;
@@ -31,6 +32,13 @@ function getAllOrPossibleToRegister(req, res, next) {
             .then(data => res.json(data))
             .catch(next);
     }
+}
+
+function joinGame(req, res, next) {
+    // TODO join only one game
+    gameService.joinGame(req.user.id, req.params.id)
+        .then(data => res.json(data))
+        .catch(next);
 }
 
 function getById(req, res, next) {

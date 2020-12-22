@@ -7,7 +7,8 @@ module.exports = {
     getAllCanRegister,
     addNewGame,
     updateGame,
-    deleteGame
+    deleteGame,
+    joinGame
 }
 
 async function getAll(){
@@ -38,8 +39,14 @@ async function updateGame(game) {
 }
 
 async function deleteGame(id) {
-    const deleted = await db.Game.findByIdAndDelete({_id: id}).exec();
+    await db.Game.findByIdAndDelete({_id: id}).exec();
     return 'Game deleted';
+}
+
+async function joinGame(userId, gameid) {
+    // addToSet: avoid double registration
+    await db.Game.update({_id: gameid}, {$addToSet: {player: userId}});
+    return 'Player joined.';
 }
 
 const filterCriticalData = {
