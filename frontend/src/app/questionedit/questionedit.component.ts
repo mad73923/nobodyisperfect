@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
-import { Question } from '../_models';
+import { Question, User } from '../_models';
 import { AuthenticationService, UserService, QuestionService } from '../_services';
 
 @Component({
@@ -12,7 +12,6 @@ import { AuthenticationService, UserService, QuestionService } from '../_service
 export class QuestionEditComponent implements OnInit {
 
   question: Question;
-  creatorUsername: String;
   heading: String;
   isNewQuestion: Boolean;
   error: String;
@@ -36,9 +35,6 @@ export class QuestionEditComponent implements OnInit {
         this.isNewQuestion = false;
         this.questionService.getById(param.id).pipe(first()).subscribe(data => {
           this.question = data;
-          this.userService.getUserNameById(this.question.creator).pipe(first()).subscribe(username => {
-            this.creatorUsername = username;
-          });
         }, 
         err => {
           this.error = err;
@@ -54,10 +50,10 @@ export class QuestionEditComponent implements OnInit {
   createNewQuestion() : void {
     this.isNewQuestion = true;
     this.question = new Question();
+    this.question.creator = new User();
     this.heading = 'New Question';
     this.authenticationService.user.pipe(first()).subscribe(x => {
-      this.question.creator = x.id;
-      this.creatorUsername = x.username});
+      this.question.creator.username = x.username});
   }
 
   saveQuestion(): void {

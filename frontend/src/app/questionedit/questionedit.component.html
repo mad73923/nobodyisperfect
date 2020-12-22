@@ -1,7 +1,7 @@
 <div class="card my-4">
     <h4 class="card-header">{{heading}}</h4>
     <div class="mx-3 my-3">
-        <p class="text-right"><b>Creator:</b> {{creatorUsername}}</p>
+        <p class="text-right" *ngIf="question.creator"><b>Creator:</b> {{question.creator.username}}</p>
         <textarea type="text" class="form-control" id="workout-name" placeholder="Your question goes here..." [(ngModel)]="question.text"></textarea>
     <h4 class="my-3">Answer</h4>
         <textarea class="form-control" id="validationTextarea" placeholder="Your answer goes here..." [(ngModel)]="question.correctAnswer"></textarea>
