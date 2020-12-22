@@ -26,11 +26,14 @@ export class QuestionEditComponent implements OnInit {
     this.question = new Question();
     this.changesSaved = false;
     this.loading = false;
+    this.heading = 'Edit Question';
+  }
+
+  ngOnInit(): void {
     this.route.queryParams.pipe(first()).subscribe(param => {
       if(param.id){
         // edit question
         this.isNewQuestion = false;
-        this.heading = 'Edit Question';
         this.questionService.getById(param.id).pipe(first()).subscribe(data => {
           this.question = data;
           this.userService.getUserNameById(this.question.creator).pipe(first()).subscribe(username => {
@@ -55,9 +58,6 @@ export class QuestionEditComponent implements OnInit {
     this.authenticationService.user.pipe(first()).subscribe(x => {
       this.question.creator = x.id;
       this.creatorUsername = x.username});
-  }
-
-  ngOnInit(): void {
   }
 
   saveQuestion(): void {
