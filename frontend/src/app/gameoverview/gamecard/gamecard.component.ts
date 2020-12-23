@@ -14,10 +14,12 @@ export class GamecardComponent implements OnInit {
   @Input() game: Game;
   user: User;
   isPlayerRegistered: Boolean;
+  error: String;
 
   constructor(private gameService: GameService,
               private authService: AuthenticationService) {
     this.isPlayerRegistered = false;
+    this.error = '';
   }
 
   ngOnInit(): void {
@@ -29,8 +31,13 @@ export class GamecardComponent implements OnInit {
   }
 
   joinGame() {
-    // TODO add feedback on join
     this.gameService.join(this.game._id).pipe(first()).subscribe(
+      data => {
+        this.isPlayerRegistered = true;
+      },
+      err => {
+        this.error = err;
+      }
     );
   }
 }

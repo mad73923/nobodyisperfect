@@ -4,5 +4,6 @@
         <b>Gamemaster: </b>{{game.gameMaster.username}}<br>
         <b>Registered players: </b> {{game.players.length}}<br>
         <button type="button" class="btn btn-primary" (click)="joinGame()" *ngIf="!isPlayerRegistered">Join!</button>
+        <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
     </div>
 </div>
