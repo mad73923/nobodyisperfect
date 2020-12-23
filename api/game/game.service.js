@@ -12,12 +12,33 @@ module.exports = {
     joinGame
 }
 
+const lookupMaster =
+{$lookup: 
+    {
+        from: "users",
+        let: {player_id: "$gameMaster"},
+        pipeline: 
+        [
+            {$match: {$expr:{$eq:["$_id", "$$player_id"]}}}, {$project: {"username":1}}], 
+        as: "gameMaster"}};
+
+const lookupPlayers = {$lookup: 
+    {
+        from: "users", 
+        let: {player_id: "$players"}, 
+        pipeline: 
+        [
+            {$match: {$expr:{$in:["$_id", "$$player_id"]}}}, {$project: {"username":1}}], 
+        as: "players"}};
+
 async function getAll(){
-    return await db.Game.aggregate([{$lookup: {from: "users", localField: "gameMaster", foreignField:"_id", as:"gameMaster"}}, {$unwind: "$gameMaster"}, filterCriticalData]);
+    return await db.Game.aggregate([lookupMaster, 
+    {$unwind: "$gameMaster"},
+    lookupPlayers]);
 }
 
 async function getAllCanRegister() {
-    return await db.Game.aggregate([{$match: {currentState: state.Register}}, {$lookup: {from: "users", localField: "gameMaster", foreignField:"_id", as:"gameMaster"}}, {$unwind: "$gameMaster"}, filterCriticalData]);
+    return await db.Game.aggregate([{$match: {currentState: state.Register}}, lookupMaster, {$unwind: "$gameMaster"}, lookupPlayers]);
 }
 
 async function getById(id) {

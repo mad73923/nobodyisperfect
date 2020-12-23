@@ -1,1 +1,26 @@
 db.questions.aggregate([{$lookup: {from: "users", localField: "creator", foreignField:"_id", as:"creator"}}, {$unwind: "$creator"}, {$unset: ["creator.passwordHash", "creator.firstName", "creator.lastName", "creator.role"]}])
+
+db.games.aggregate([{$lookup: {from: "users", let: {player_id: "$_id"}, pipeline: [{$match: {$expr:{$eq:["$_id", "$$player_id"]}}}], as: "test"}}]).pretty()
+
+db.games.aggregate([{$lookup: {from: "users", let: {player_id: "$players"}, pipeline: [{$match: {$expr:{$in:["$_id", "$$player_id"]}}}], as: "test"}}]).pretty()
+
+db.games.aggregate([{$lookup: {from: "users", let: {player_id: "$players"}, pipeline: [{$match: {$expr:{$in:["$_id", "$$player_id"]}}}, {$project: {"username":1}}], as: "test"}}]).pretty()
+
+db.games.aggregate([
+    {$lookup: 
+        {
+            from: "users", 
+            let: {player_id: "$players"}, 
+            pipeline: 
+            [
+                {$match: {$expr:{$in:["$_id", "$$player_id"]}}}, {$project: {"username":1}}], 
+            as: "players"}}, 
+    {$lookup: 
+        {
+            from: "users",
+            let: {player_id: "$gameMaster"},
+            pipeline: 
+            [
+                {$match: {$expr:{$eq:["$_id", "$$player_id"]}}}, {$project: {"username":1}}], 
+            as: "gameMaster"}}, 
+    {$unwind: "$gameMaster"}]).pretty()

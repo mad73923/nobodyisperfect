@@ -13,22 +13,24 @@ export class GamecardComponent implements OnInit {
 
   @Input() game: Game;
   user: User;
+  isPlayerRegistered: Boolean;
 
   constructor(private gameService: GameService,
-              private authService: AuthenticationService) { }
+              private authService: AuthenticationService) {
+    this.isPlayerRegistered = false;
+  }
 
   ngOnInit(): void {
     this.authService.user.pipe(first()).subscribe(
-      x => this.user = x);
+      x => {
+        this.user = x;
+        this.isPlayerRegistered = this.game.players.map(x => x.username).includes(this.user.username);
+      });
   }
 
   joinGame() {
+    // TODO add feedback on join
     this.gameService.join(this.game._id).pipe(first()).subscribe(
-      data => console.log(data)
     );
-  }
-
-  isPlayerRegistered() : Boolean{
-    return this.game.players.includes(this.user);
   }
 }
