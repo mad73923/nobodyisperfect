@@ -34,6 +34,8 @@ export class GamecardComponent implements OnInit {
     this.gameService.join(this.game._id).pipe(first()).subscribe(
       data => {
         this.isPlayerRegistered = true;
+        // TODO this is not the same schema
+        this.game.players.push(this.user)
       },
       err => {
         this.error = err;
