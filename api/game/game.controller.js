@@ -9,7 +9,7 @@ router.post('/', authorize([Role.Admin, Role.GameMaster]), addNewGame)
 router.get('/', authorize(), getAllOrPossibleToRegister)
 router.get('/:id', authorize(), getById)
 router.put('/', authorize([Role.Admin, Role.GameMaster]), updateGame)
-router.put('/join/:id', authorize(), joinGame),
+router.put('/join/:id', authorize(), joinGame)
 router.delete('/:id', authorize([Role.Admin, Role.GameMaster]), deleteGame)
 
 module.exports = router;

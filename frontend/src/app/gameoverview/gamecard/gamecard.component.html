@@ -1,7 +1,8 @@
 <div class="card mt-4" *ngIf="game">
     <h4 class="card-header">{{game.name}}</h4>
     <div class="card-body">
-        {{game.gameMaster.username}}<br>
-        <button type="button" class="btn btn-primary">Join!</button>
+        <b>Gamemaster: </b>{{game.gameMaster.username}}<br>
+        <b>Registered players: </b> {{game.players.length}}<br>
+        <button type="button" class="btn btn-primary" (click)="joinGame()" *ngIf="!isPlayerRegistered()">Join!</button>
     </div>
 </div>

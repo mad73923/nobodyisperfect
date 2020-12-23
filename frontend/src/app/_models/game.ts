@@ -5,7 +5,7 @@ export class Game {
     name: string;
     gameMaster: User;
     createdAt: Date;
-    players: Number[];
+    players: User[];
     currentQuestion: Number;
     currentState: String;
 }

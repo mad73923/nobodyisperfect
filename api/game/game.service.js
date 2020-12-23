@@ -1,5 +1,6 @@
 const db = require('_helpers/db');
 const state = require('_helpers/gameState')
+var ObjectId = require('mongoose').Types.ObjectId
 
 module.exports = {
     getAll,
@@ -45,7 +46,7 @@ async function deleteGame(id) {
 
 async function joinGame(userId, gameid) {
     // addToSet: avoid double registration
-    await db.Game.update({_id: gameid}, {$addToSet: {player: userId}});
+    await db.Game.updateOne({_id: ObjectId(gameid)}, {$addToSet: {players: ObjectId(userId)}});
     return 'Player joined.';
 }
 

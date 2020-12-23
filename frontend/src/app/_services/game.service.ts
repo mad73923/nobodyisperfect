@@ -23,10 +23,14 @@ export class GameService {
   }
 
   update(game: Game) {
-    return this.http.put<Game>(`${environment.apiUrl}/question`, game);
+    return this.http.put<Game>(`${environment.apiUrl}/game`, game);
   }
 
   delete(id: Number) {
     return this.http.delete<any>(`${environment.apiUrl}/game/${id}`);
+  }
+
+  join(id: Number) {
+    return this.http.put<any>(`${environment.apiUrl}/game/join/${id}`, null);
   }
 }
