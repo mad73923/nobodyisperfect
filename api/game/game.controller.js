@@ -18,7 +18,7 @@ function addNewGame(req, res, next) {
     req.body.gameMaster = req.user.id;
     req.body.createdAt = Date.now();
     gameService.addNewGame(req.body)
-        .then(data => res.status(200).json(data))
+        .then(data => res.status(200).json(data[0]))
         .catch(next);
 }
 
@@ -44,7 +44,7 @@ function joinGame(req, res, next) {
 function getById(req, res, next) {
     // TODO only if user is in players
     gameService.getById(req.params.id)
-        .then(data => res.json(data))
+        .then(data => res.json(data[0]))
         .catch(next);
 }
 
@@ -54,7 +54,7 @@ function updateGame(req, res, next) {
         // if not admin, dont allow changes of
         // game from other gamemasters
         // TODO this has to be made more secure
-        if(req.user.id !== req.body.gameMaster) {
+        if(req.user.id !== req.body.gameMaster._id) {
             throw 'GameMaster not allowed to change others games';
         }
     }
@@ -66,8 +66,10 @@ function updateGame(req, res, next) {
 function deleteGame(req, res, next) {
     gameService.getById(req.params.id)
         .then(data => {
+            // unpack
+            data = data[0]
             if((!req.user.role.includes(Role.Admin)) &&
-                !data.gameMaster.equals(req.user.id)) {
+                !data.gameMaster._id.equals(req.user.id)) {
                     throw 'User not allowed to delete question';
                 }
             gameService.deleteGame(req.params.id)

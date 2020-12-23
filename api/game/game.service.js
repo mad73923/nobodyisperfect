@@ -1,5 +1,5 @@
 const db = require('_helpers/db');
-const state = require('_helpers/gameState')
+const state = require('_helpers/gameState');
 var ObjectId = require('mongoose').Types.ObjectId
 
 module.exports = {
@@ -19,7 +19,9 @@ const lookupMaster =
         let: {player_id: "$gameMaster"},
         pipeline: 
         [
-            {$match: {$expr:{$eq:["$_id", "$$player_id"]}}}, {$project: {"username":1}}], 
+            {$match: {$expr:{$eq:["$_id", "$$player_id"]}}},
+            {$project: {"username":1}}
+        ], 
         as: "gameMaster"}};
 
 const lookupPlayers = {$lookup: 
@@ -28,7 +30,9 @@ const lookupPlayers = {$lookup:
         let: {player_id: "$players"}, 
         pipeline: 
         [
-            {$match: {$expr:{$in:["$_id", "$$player_id"]}}}, {$project: {"username":1}}], 
+            {$match: {$expr:{$in:["$_id", "$$player_id"]}}},
+            {$project: {"username":1}}
+        ], 
         as: "players"}};
 
 async function getAll(){
@@ -42,11 +46,12 @@ async function getAllCanRegister() {
 }
 
 async function getById(id) {
-    return await db.Game.findById(id);
+    return await await db.Game.aggregate([{$match: {_id: ObjectId(id)}}, lookupMaster, {$unwind: "$gameMaster"}, lookupPlayers]);
 }
 
 async function addNewGame(game){
-    return await db.Game(game).save();
+    let newGame =  await db.Game(game).save();
+    return getById(newGame._id);
 }
 
 async function updateGame(game) {
@@ -70,7 +75,3 @@ async function joinGame(userId, gameid) {
     await db.Game.updateOne({_id: ObjectId(gameid)}, {$addToSet: {players: ObjectId(userId)}});
     return 'Player joined.';
 }
-
-const filterCriticalData = {
-    $unset: ["gameMaster.passwordHash", "gameMaster.firstName", "gameMaster.lastName", "gameMaster.role"]
-};
