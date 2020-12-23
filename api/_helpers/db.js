@@ -9,6 +9,8 @@ module.exports = {
     Question: require('question/question.model'),
     Game: require('game/game.model'),
     RefreshToken: require('users/refresh-token.model'),
+    Answer: require('game/answer.model'),
+    Round: require('game/round.model'),
     isValidId
 };
 

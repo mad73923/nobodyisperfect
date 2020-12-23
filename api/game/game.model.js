@@ -8,9 +8,9 @@ const schema = new Schema({
     gameMaster: { type: ObjectId, ref: 'User', required: true },
     createdAt: {type: Date, default: Date.now},
     players: [{ type: ObjectId, ref: 'User'}],
-    currentQuestion: { type: ObjectId, ref: 'Question'},
-    currentState:{ type: String, required: true, enum: Object.values(state), default: state.Register 
-    }
+    currentState:{ type: String, required: true, enum: Object.values(state), default: state.Register },
+    stateUntil: {type: Date},
+    currentRound: { type: ObjectId, ref: 'Round'},
 });
 
 module.exports = mongoose.model('Game', schema);
