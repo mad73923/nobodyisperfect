@@ -101,7 +101,7 @@ describe('Game', () => {
 
     describe('/PUT', () => {
         it('modify the game state', (done) => {
-            gameGame.currentState = state.Running;
+            gameGame.currentState = state.ReadQuestion;
             chai.request(server)
             .put('/game')
             .set(gameToken)
@@ -134,7 +134,7 @@ describe('Game', () => {
             });
         });
 
-        it('users should be able to join ONLY ONE game');
+        it('users should be able to join ONLY ONE game (except if they are finished');
     });
 
     describe('/GET', () => {
@@ -215,5 +215,31 @@ describe('Game', () => {
                 done();
             });
         });
+    });
+
+    describe('Gameflow', () => {
+        it('gamemaster shall be able to create new round');
+        it('admin shall be able to create new round');
+        it('user shall not be able to create new round');
+        it('gamemaster shall be able to change game state');
+
+        it('gamemaster shall be able to create new round');
+        it('gamemaster shall be able to change question of round');
+        it('next reader shall be picked automatically');
+        it('next reader shall be picked automatically');
+
+    });
+
+    describe('Answering', () => {
+        it('only one answer per round and player (if multi-answer disabled)');
+        it('reader may not hand in answer (if reader mode enabled)');
+        it('if all players handed in their answer, the game state shall change to pick question');
+    });
+
+    describe('Pick answer', () => {
+        it('only one pick per round and player');
+        it('if all answers picked, change game state to ranking');
+        it('reader may not pick answer (if reader mode enabled)');
+
     });
 });

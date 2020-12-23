@@ -1,5 +1,7 @@
 module.exports = {
     Register: "Register",
-    Running: "Running",
+    ReadQuestion: "ReadQuestion",
+    PickAnswer: "PickAnswer",
+    Ranking: "Ranking",
     Finished: "Finished"
 }
