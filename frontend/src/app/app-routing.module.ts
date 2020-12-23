@@ -8,6 +8,7 @@ import { QuestionmanagementComponent } from './questionmanagement';
 import { QuestionEditComponent } from './questionedit';
 import { AuthGuard } from './_helpers';
 import { Role } from './_models';
+import { GameviewComponent } from './gameview/gameview.component';
 
 const routes: Routes = [
     {
@@ -34,6 +35,11 @@ const routes: Routes = [
         path: 'editquestion',
         canActivate: [AuthGuard],
         component: QuestionEditComponent
+    },
+    {
+        path: 'game/:id',
+        canActivate: [AuthGuard],
+        component: GameviewComponent
     },
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

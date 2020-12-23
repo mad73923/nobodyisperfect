@@ -21,6 +21,7 @@ import { QuestiontableComponent } from './questiontable/questiontable.component'
 import { QuestionrowComponent } from './questiontable/questionrow/questionrow.component';
 import { GameoverviewComponent } from './gameoverview/gameoverview.component';
 import { GamecardComponent } from './gameoverview/gamecard/gamecard.component';
+import { GameviewComponent } from './gameview/gameview.component';
 
 @NgModule({
     imports: [
@@ -41,7 +42,8 @@ import { GamecardComponent } from './gameoverview/gamecard/gamecard.component';
         QuestiontableComponent,
         QuestionrowComponent,
         GameoverviewComponent ,
-        GamecardComponent   ],
+        GamecardComponent ,
+        GameviewComponent  ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

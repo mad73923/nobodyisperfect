@@ -3,6 +3,7 @@ import { GameService } from '@app/_services/game.service';
 import { Game, User } from '@app/_models';
 import { AuthenticationService } from '@app/_services';
 import { first } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gamecard',
@@ -17,7 +18,8 @@ export class GamecardComponent implements OnInit {
   error: String;
 
   constructor(private gameService: GameService,
-              private authService: AuthenticationService) {
+              private authService: AuthenticationService,
+              private router: Router) {
     this.isPlayerRegistered = false;
     this.error = '';
   }
