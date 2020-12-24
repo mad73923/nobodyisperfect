@@ -7,6 +7,7 @@
         If not, ask your game master: {{game.gameMaster.username}}
     </div>
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
+    <app-gamelog></app-gamelog>
     <div *ngIf="authService.isAdmin || game.gameMaster._id == user._id">
         Master
     </div>
