@@ -6,12 +6,14 @@ const Role = require('_helpers/role');
 const State = require('_helpers/gameState');
 
 const io = require('_helpers/socketio');
+const { func } = require('@hapi/joi');
 
 router.post('/', authorize([Role.Admin, Role.GameMaster]), addNewGame)
 router.get('/', authorize(), getAllOrPossibleToRegister)
 router.get('/:id', authorize(), getById)
 router.put('/', authorize([Role.Admin, Role.GameMaster]), updateGame)
 router.put('/join/:id', authorize(), joinGame)
+router.put('/newRound/:id', authorize([Role.Admin, Role.GameMaster]), newRound)
 router.delete('/:id', authorize([Role.Admin, Role.GameMaster]), deleteGame)
 
 module.exports = router;
@@ -47,6 +49,13 @@ function getById(req, res, next) {
     // TODO only if user is in players
     gameService.getById(req.params.id)
         .then(data => res.json(data[0]))
+        .catch(next);
+}
+
+function newRound(req, res, next) {
+    // TODO only let admin or gamemaster of game do this
+    gameService.newRound(req.params.id)
+        .then(data => res.json(data))
         .catch(next);
 }
 

@@ -33,4 +33,8 @@ export class GameService {
   join(id: Number) {
     return this.http.put<any>(`${environment.apiUrl}/game/join/${id}`, null);
   }
+
+  newRound(id: Number) {
+    return this.http.put<any>(`${environment.apiUrl}/game/newRound/${id}`, null);
+  }
 }

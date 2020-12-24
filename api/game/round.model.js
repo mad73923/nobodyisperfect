@@ -8,7 +8,6 @@ const schema = new Schema({
     correctAnswerPickedBy: [{ type: ObjectId, ref: 'User'}],
     answers: [{ type: ObjectId, ref: 'Answer'}],
     reader: { type: ObjectId, ref: 'User', required: true },
-    creator: { type: ObjectId, ref: 'User', required: true },
     createdAt: {type: Date, default: Date.now}
 });
 

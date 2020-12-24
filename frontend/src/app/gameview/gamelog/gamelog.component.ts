@@ -12,6 +12,7 @@ export class GamelogComponent implements OnInit {
   
   
   public newMessage(message){
+    // TODO add timestamp
     this.logText = this.logText.concat('\n', message);
   }
 

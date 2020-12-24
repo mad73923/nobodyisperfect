@@ -16,7 +16,7 @@ import { GamelogComponent } from './gamelog/gamelog.component';
 export class GameviewComponent implements OnInit {
 
   @ViewChild(GamelogComponent) log: GamelogComponent;
-  game: Game;
+  public game: Game;
   error: String;
   user: User;
   routerSubscription: Subscription;
@@ -62,6 +62,10 @@ export class GameviewComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.cleanupSubscriptions();
+  }
+
+  newRound() {
+    this.gameService.newRound(this.game._id).pipe(first()).subscribe(data => console.log(data));
   }
 
 }

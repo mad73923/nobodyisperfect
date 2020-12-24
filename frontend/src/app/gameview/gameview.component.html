@@ -9,7 +9,7 @@
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
     <app-gamelog></app-gamelog>
     <div *ngIf="authService.isAdmin || game.gameMaster._id == user._id">
-        Master
+        <button type="button" class="btn btn-warning" (click)="newRound()">New Round</button>
     </div>
     </div>
 </div>

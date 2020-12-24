@@ -10,6 +10,5 @@ export class Round {
     correctAnswerPickedBy: User[];
     answers: Answer[];
     reader: User;
-    creator: User;
     createdAt: Date;
 }
