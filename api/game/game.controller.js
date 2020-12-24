@@ -5,6 +5,8 @@ const gameService = require('./game.service');
 const Role = require('_helpers/role');
 const State = require('_helpers/gameState');
 
+const io = require('_helpers/socketio');
+
 router.post('/', authorize([Role.Admin, Role.GameMaster]), addNewGame)
 router.get('/', authorize(), getAllOrPossibleToRegister)
 router.get('/:id', authorize(), getById)

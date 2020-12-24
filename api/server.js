@@ -39,21 +39,10 @@ app.use(errorHandler);
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
 var server = http.createServer(app);
 
-var io = require('socket.io')(server, {
-    cors: 
-        {origin: (origin, callback) => {
-            callback(null, true);
-        }, 
-        credentials: true
-    }
-    });
+require('_helpers/socketio').initialize(server);
 
 server.listen(port, () => {
     console.log('Server listening on port ' + port);
 });
-
-io.on('connection', (socket) => {
-    console.log('a user connected');
-  });
 
 module.exports = app;

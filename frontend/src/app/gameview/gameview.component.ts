@@ -35,8 +35,6 @@ export class GameviewComponent implements OnInit {
     let gameId =this.route.snapshot.params['id'];
       if(gameId){
         this.gameService.getById(gameId).pipe(first()).subscribe(game => {
-          //console.log(game);
-          //console.log(this.user);
           this.game = game;
         },
         (err) => {
