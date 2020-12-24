@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { SocketIoModule } from 'ngx-socket-io';
 
 // used to create fake backend
 import { fakeBackendProvider } from './_helpers';
@@ -22,6 +23,7 @@ import { QuestionrowComponent } from './questiontable/questionrow/questionrow.co
 import { GameoverviewComponent } from './gameoverview/gameoverview.component';
 import { GamecardComponent } from './gameoverview/gamecard/gamecard.component';
 import { GameviewComponent } from './gameview/gameview.component';
+import { GameSocketService } from './_helpers/socketio';
 
 @NgModule({
     imports: [
@@ -29,7 +31,8 @@ import { GameviewComponent } from './gameview/gameview.component';
         ReactiveFormsModule,
         HttpClientModule,
         AppRoutingModule,
-        FormsModule
+        FormsModule,
+        SocketIoModule
     ],
     declarations: [
         AppComponent,
@@ -47,7 +50,7 @@ import { GameviewComponent } from './gameview/gameview.component';
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
+        GameSocketService
         // provider used to create fake backend
         //fakeBackendProvider
     ],

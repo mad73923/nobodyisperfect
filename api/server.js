@@ -1,6 +1,8 @@
 ﻿require('rootpath')();
 const express = require('express');
 const app = express();
+const http = require('http');
+
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -15,7 +17,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 // allow cors requests from any origin and with credentials
-app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: true }));
+app.use(cors({ origin: (origin, callback) => {
+    callback(null, true);
+}, credentials: true }));
 
 // api routes
 app.use('/users', require('./users/users.controller'));
@@ -33,8 +37,23 @@ app.use(errorHandler);
 
 // start server
 const port = process.env.NODE_ENV === 'production' ? (process.env.PORT || 80) : 4000;
-app.listen(port, () => {
+var server = http.createServer(app);
+
+var io = require('socket.io')(server, {
+    cors: 
+        {origin: (origin, callback) => {
+            callback(null, true);
+        }, 
+        credentials: true
+    }
+    });
+
+server.listen(port, () => {
     console.log('Server listening on port ' + port);
 });
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+  });
 
 module.exports = app;
