@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GameService } from '@app/_services/game.service';
 import { Game, User } from '@app/_models';
 import { ActivatedRoute, Router } from '@angular/router';
-import { first } from 'rxjs/operators';
+import { first, timeout } from 'rxjs/operators';
 import { AuthenticationService } from '@app/_services';
 import { GameSocketService } from '@app/_helpers/socketio';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, timer } from 'rxjs';
 
 @Component({
   selector: 'app-gameview',
@@ -36,6 +36,7 @@ export class GameviewComponent implements OnInit {
       if(gameId){
         this.gameService.getById(gameId).pipe(first()).subscribe(game => {
           this.game = game;
+          this.gameSocket.emit('gameJoined', this.game._id.toString(), this.user.username);
         },
         (err) => {
           // non-valid game-id
@@ -46,12 +47,16 @@ export class GameviewComponent implements OnInit {
         this.router.navigate(['/']);
       }
     this.routerSubscription = this.router.events.subscribe(event => 
-      this.gameSocket.disconnect());
+      this.cleanupSubscriptions());
+  }
+
+  cleanupSubscriptions(): void {
+    this.routerSubscription.unsubscribe();
+    this.gameSocket.disconnect();
   }
 
   ngOnDestroy(): void {
-    this.routerSubscription.unsubscribe();
-    this.gameSocket.disconnect();
+    this.cleanupSubscriptions();
   }
 
 }
