@@ -69,7 +69,7 @@ async function newRound(id) {
     usedQuestions = usedQuestions.map(x => x.currentQuestion);
     // pick random new question
     let newQuestion = await db.Question.aggregate([
-        {$match: {_id: {$nin: usedQuestions}}},
+        {$match:{_id: {$nin: usedQuestions}, accepted: true}},
         {$sample: {size: 1}}
     ]);
     if(!newQuestion.length){
