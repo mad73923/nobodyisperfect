@@ -75,7 +75,7 @@ async function getAllCanRegister() {
 }
 
 async function getById(id) {
-    return await db.Game.aggregate([{$match: {_id: ObjectId(id)}}, lookupMaster, {$unwind: "$gameMaster"}, lookupPlayers, lookupRound, {$unwind: "$currentRound"}]);
+    return await db.Game.aggregate([{$match: {_id: ObjectId(id)}}, lookupMaster, {$unwind: "$gameMaster"}, lookupPlayers, lookupRound, {$unwind: {path: "$currentRound", preserveNullAndEmptyArrays: true}}]);
 }
 
 async function addNewGame(game){
