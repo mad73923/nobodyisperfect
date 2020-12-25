@@ -79,4 +79,8 @@ export class GameviewComponent implements OnInit {
     return this.user._id == this.game.currentRound.reader._id || this.user.role.includes(Role.Admin)
   }
 
+  sendAnswer() {
+    
+  }
+
 }
