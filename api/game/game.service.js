@@ -45,6 +45,7 @@ const lookupRound = {$lookup:
         pipeline:
         [
             {$match: {$expr:{$eq:["$_id", "$$round_id"]}}},
+            // fill question
             {$lookup:
                 {
                     from: "questions",
@@ -58,7 +59,21 @@ const lookupRound = {$lookup:
                 }
             },
             {$unwind: "$currentQuestion"},
-            {$project: {"correctAnswerPickedBy": 0}}
+            {$project: {"correctAnswerPickedBy": 0}},
+            // fill reader
+            {$lookup:
+                {
+                    from: "users",
+                    let: {reader_id: "$reader"},
+                    pipeline:
+                    [
+                        {$match: {$expr:{$eq:["$_id", "$$reader_id"]}}},
+                        {$project: {"username": 1}}
+                    ],
+                    as: "reader"
+                }
+            },
+            {$unwind: "$reader"},
         ],
         as: "currentRound"
     }

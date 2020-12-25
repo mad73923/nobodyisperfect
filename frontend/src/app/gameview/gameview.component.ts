@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { GameService } from '@app/_services/game.service';
-import { Game, User } from '@app/_models';
+import { Game, User, Role } from '@app/_models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first, timeout } from 'rxjs/operators';
 import { AuthenticationService } from '@app/_services';
@@ -71,6 +71,10 @@ export class GameviewComponent implements OnInit {
 
   newRound() {
     this.gameService.newRound(this.game._id).pipe(first()).subscribe(data => {return}, error => this.error = error);
+  }
+
+  maySeeQuestion() {
+    return this.user._id == this.game.currentRound.reader._id || this.user.role.includes(Role.Admin)
   }
 
 }

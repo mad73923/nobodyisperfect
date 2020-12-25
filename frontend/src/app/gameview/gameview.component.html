@@ -10,7 +10,8 @@
 
     <div *ngIf="game.currentState == 'ReadQuestion'">
         <h5>Question</h5>
-        <h5 class="text-center">{{game.currentRound.currentQuestion.text}}</h5>
+        <h5 class="text-center" *ngIf="maySeeQuestion()">{{game.currentRound.currentQuestion.text}}</h5>
+        <h6 class="text-center font-italic" *ngIf="!maySeeQuestion()">Question presented by {{game.currentRound.reader.username}}.</h6>
     </div>
 
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
