@@ -65,7 +65,7 @@ export class GameviewComponent implements OnInit {
   }
 
   newRound() {
-    this.gameService.newRound(this.game._id).pipe(first()).subscribe(data => console.log(data));
+    this.gameService.newRound(this.game._id).pipe(first()).subscribe(data => {return}, error => this.error = error);
   }
 
 }
