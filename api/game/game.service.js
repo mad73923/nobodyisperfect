@@ -1,7 +1,8 @@
 const db = require('_helpers/db');
 const state = require('_helpers/gameState');
 const gameState = require('../_helpers/gameState');
-var ObjectId = require('mongoose').Types.ObjectId
+var ObjectId = require('mongoose').Types.ObjectId;
+const io = require('_helpers/socketio');
 
 module.exports = {
     getAll,
@@ -82,10 +83,13 @@ async function newRound(id) {
         // create the first round
         nextReader = game.players[0];
     }else{
-        let currentReaderIndex = game.players.indexOf(game.currentRound.reader);
+        game.currentRound = await db.Round.findOne({_id: ObjectId(game.currentRound)});
+        let currentReaderIndex = game.players.toString().indexOf(game.currentRound.reader._id);
         if(currentReaderIndex < game.players.length - 1){
+            // pick next player
             nextReader = game.players[currentReaderIndex + 1];
         }else{
+            // start from beginning
             nextReader = game.players[0];
         }
     }
@@ -96,7 +100,9 @@ async function newRound(id) {
     }).save();
     game.currentState = gameState.ReadQuestion;
     game.currentRound = newRound._id;
-    return await db.Game.updateOne({_id: game._id}, game);
+    let ret = await db.Game.updateOne({_id: game._id}, game);
+    io.io().in(game.id).emit('logUpdate', 'New round started');
+    return ret;
 }
 
 async function updateGame(game) {
