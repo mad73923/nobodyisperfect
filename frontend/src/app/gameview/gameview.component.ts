@@ -36,7 +36,12 @@ export class GameviewComponent implements OnInit {
     this.gameSocket.connect();
     this.gameSocket.on('logUpdate', (data) => {
       this.log.newMessage(data);
-    })
+    });
+    this.gameSocket.on('gameUpdate', (data) => {
+      this.gameService.getById(this.game._id).pipe(first()).subscribe(game =>{
+        this.game = game;
+      })
+    });
     let gameId =this.route.snapshot.params['id'];
       if(gameId){
         this.gameService.getById(gameId).pipe(first()).subscribe(game => {

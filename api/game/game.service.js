@@ -128,6 +128,7 @@ async function newRound(id) {
     game.currentRound = newRound._id;
     let ret = await db.Game.updateOne({_id: game._id}, game);
     io.io().in(game.id).emit('logUpdate', 'New round started');
+    io.io().in(game.id).emit('gameUpdate');
     return ret;
 }
 
