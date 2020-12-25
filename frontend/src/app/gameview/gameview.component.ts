@@ -19,6 +19,7 @@ export class GameviewComponent implements OnInit {
   public game: Game;
   error: String;
   user: User;
+  answerText: String;
   routerSubscription: Subscription;
 
   constructor(private gameService: GameService,
@@ -30,6 +31,7 @@ export class GameviewComponent implements OnInit {
     this.game.gameMaster = new User();
     this.error = '';
     this.user = this.authService.userValue;
+    this.answerText = '';
   }
 
   ngOnInit(): void {
