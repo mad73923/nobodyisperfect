@@ -38,6 +38,32 @@ const lookupPlayers = {$lookup:
         ], 
         as: "players"}};
 
+const lookupRound = {$lookup:
+    {
+        from: "rounds",
+        let: {round_id: "$currentRound"},
+        pipeline:
+        [
+            {$match: {$expr:{$eq:["$_id", "$$round_id"]}}},
+            {$lookup:
+                {
+                    from: "questions",
+                    let: {question_id: "$currentQuestion"},
+                    pipeline:
+                    [
+                        {$match: {$expr:{$eq:["$_id", "$$question_id"]}}},
+                        {$project: {"correctAnswer": 0}}
+                    ],
+                    as: "currentQuestion"
+                }
+            },
+            {$unwind: "$currentQuestion"},
+            {$project: {"correctAnswerPickedBy": 0}}
+        ],
+        as: "currentRound"
+    }
+};
+
 async function getAll(){
     return await db.Game.aggregate([lookupMaster, 
     {$unwind: "$gameMaster"},
@@ -49,7 +75,7 @@ async function getAllCanRegister() {
 }
 
 async function getById(id) {
-    return await db.Game.aggregate([{$match: {_id: ObjectId(id)}}, lookupMaster, {$unwind: "$gameMaster"}, lookupPlayers]);
+    return await db.Game.aggregate([{$match: {_id: ObjectId(id)}}, lookupMaster, {$unwind: "$gameMaster"}, lookupPlayers, lookupRound, {$unwind: "$currentRound"}]);
 }
 
 async function addNewGame(game){

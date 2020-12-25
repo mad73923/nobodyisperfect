@@ -1,13 +1,24 @@
 <div class="card my-4">
     <h4 class="card-header">Game: {{game.name}}</h4>
     <div class="card-body">
+
     <div *ngIf="game.currentState == 'Register'">
         Waiting for more players to join. Game will start shortly...
         <span class="spinner-border spinner-border-sm mr-1"></span><br>
         If not, ask your game master: {{game.gameMaster.username}}
     </div>
+
+    <div *ngIf="game.currentState == 'ReadQuestion'">
+        <h5>Question</h5>
+        <h5 class="text-center">{{game.currentRound.currentQuestion.text}}</h5>
+    </div>
+
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
+
+    <h5>Log:</h5>
     <app-gamelog></app-gamelog>
+
+
     <div *ngIf="authService.isAdmin || game.gameMaster._id == user._id">
         <button type="button" class="btn btn-warning" (click)="newRound()">New Round</button>
     </div>

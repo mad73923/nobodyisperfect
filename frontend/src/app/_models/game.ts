@@ -1,4 +1,5 @@
 import { User } from './user';
+import { Round } from './round';
 
 export class Game {
     _id: Number;
@@ -8,5 +9,5 @@ export class Game {
     players: User[];
     currentState: String;
     stateUntil: Date;
-    currentRound: Number;
+    currentRound: Round;
 }
