@@ -18,7 +18,7 @@ export class GamecardComponent implements OnInit {
   error: String;
 
   constructor(private gameService: GameService,
-              private authService: AuthenticationService,
+              public authService: AuthenticationService,
               private router: Router) {
     this.isPlayerRegistered = false;
     this.error = '';
