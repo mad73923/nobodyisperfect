@@ -32,7 +32,7 @@ function getAllOrPossibleToRegister(req, res, next) {
             .then(data => {res.json(data)})
             .catch(next);
     }else{
-        gameService.getAllCanRegister()
+        gameService.getAllCanRegisterOrIsPlayer(req.user.id)
             .then(data => res.json(data))
             .catch(next);
     }

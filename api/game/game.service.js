@@ -7,7 +7,7 @@ const io = require('_helpers/socketio');
 module.exports = {
     getAll,
     getById,
-    getAllCanRegister,
+    getAllCanRegisterOrIsPlayer,
     addNewGame,
     updateGame,
     deleteGame,
@@ -85,8 +85,8 @@ async function getAll(){
     lookupPlayers]);
 }
 
-async function getAllCanRegister() {
-    return await db.Game.aggregate([{$match: {currentState: state.Register}}, lookupMaster, {$unwind: "$gameMaster"}, lookupPlayers]);
+async function getAllCanRegisterOrIsPlayer(userId) {
+    return await db.Game.aggregate([{$match: {$or: [{currentState: state.Register}, {players: ObjectId(userId)}]}}, lookupMaster, {$unwind: "$gameMaster"}, lookupPlayers]);
 }
 
 async function getById(id) {
