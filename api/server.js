@@ -43,7 +43,6 @@ require('_helpers/socketio').initialize(server);
 
 server.listen(port, () => {
     console.log('Server listening on port ' + port);
-    console.log(process.env.MONGODB_URI);
 });
 
 module.exports = app;

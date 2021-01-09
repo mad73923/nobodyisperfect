@@ -7,6 +7,7 @@ const State = require('_helpers/gameState');
 
 const io = require('_helpers/socketio');
 const { func } = require('@hapi/joi');
+const gameState = require('../_helpers/gameState');
 
 router.post('/', authorize([Role.Admin, Role.GameMaster]), addNewGame)
 router.get('/', authorize(), getAllOrPossibleToRegister)
@@ -15,6 +16,8 @@ router.put('/', authorize([Role.Admin, Role.GameMaster]), updateGame)
 router.put('/join/:id', authorize(), joinGame)
 router.put('/newRound/:id', authorize([Role.Admin, Role.GameMaster]), newRound)
 router.delete('/:id', authorize([Role.Admin, Role.GameMaster]), deleteGame)
+
+router.post('/answer', authorize(), addAnswer)
 
 module.exports = router;
 
@@ -86,6 +89,18 @@ function deleteGame(req, res, next) {
             gameService.deleteGame(req.params.id)
             .then(data =>
                 res.status(200).json({message: 'Question deleted'}))
+        })
+        .catch(next);
+}
+
+
+function addAnswer(req, res, next) {
+    req.body.creator = req.body.creator._id;
+    req.body.fromQuestion = req.body.fromQuestion._id;
+    req.body.game = req.body.game._id;
+    gameService.addAnswer(req.body, req.user)
+        .then(data => {
+            res.json(data);
         })
         .catch(next);
 }

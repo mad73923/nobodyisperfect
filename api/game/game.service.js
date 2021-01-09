@@ -12,7 +12,8 @@ module.exports = {
     updateGame,
     deleteGame,
     joinGame,
-    newRound
+    newRound,
+    addAnswer
 }
 
 const lookupMaster =
@@ -74,6 +75,33 @@ const lookupRound = {$lookup:
                 }
             },
             {$unwind: "$reader"},
+            // fill answered by
+            {$lookup: 
+                {
+                    from: "answers",
+                    let: {answer_id: "$answers"},
+                    pipeline:
+                    [
+                        {$match: {$expr:{$in:["$_id", "$$answer_id"]}}},
+                        {$project: {"creator": 1}},
+                        // fill creator
+                        {$lookup:
+                            {
+                                from: "users",
+                                let: {creator_id: "$creator"},
+                                pipeline:
+                                [
+                                    {$match: {$expr:{$eq:["$_id", "$$creator_id"]}}},
+                                    {$project: {"username": 1}}
+                                ],
+                                as: "creator"
+                            }
+                        },
+                        {$unwind: "$creator"}
+                    ],
+                    as: "answers"
+                }
+            }
         ],
         as: "currentRound"
     }
@@ -145,6 +173,65 @@ async function newRound(id) {
     io.io().in(game.id).emit('logUpdate', 'New round started');
     io.io().in(game.id).emit('gameUpdate');
     return ret;
+}
+
+async function addAnswer(answer, user) {
+    let game = await db.Game.findOne({_id: ObjectId(answer.game)});
+    if(!game){
+        throw "Game not found";
+    }
+    if(game.currentState != gameState.ReadQuestion){
+        throw "Wrong game state";
+    }
+    // check if player is part of game
+    if(!game.players.includes(ObjectId(user.id))){
+        throw "Player not part of the game"
+    }
+    let round = await db.Round.findOne({_id: ObjectId(game.currentRound)})
+    if(!round){
+        throw "No current round.";
+    }
+    // check if already handed in answer
+    let handedIn = await db.Round.aggregate([
+        {$match: {_id: ObjectId(round._id)}},
+        {$lookup: {
+            from: "answers",
+            let: {answer_id: "$answers"},
+            pipeline:
+            [
+                {$match: {$expr:{$in:["$_id", "$$answer_id"]}}},
+                {$project: {"creator": 1}},
+                // fill creator
+                {$lookup:
+                    {
+                        from: "users",
+                        let: {creator_id: "$creator"},
+                        pipeline:
+                        [
+                            {$match: {$expr:{$eq:["$_id", "$$creator_id"]}}},
+                            {$project: {"_id": 1}}
+                        ],
+                        as: "creator"
+                    }
+                },
+                {$unwind: "$creator"}
+            ],
+            as: "answeredby"
+        }}
+    ]);
+    handedIn[0].answeredby.map(x => {
+        if(x.creator._id == user.id){
+            throw "User already answered this question!"
+        }
+    })
+    await db.Answer(answer).save((err, answer) => {
+        return db.Round.updateOne({_id: round._id}, {$addToSet: {answers: answer._id}})
+        .then(data => {
+        io.io().in(game.id).emit('logUpdate', `A player has handed in a answer.`);
+        io.io().in(game.id).emit('gameUpdate');
+            return data;});
+        // TODO ERROR handling
+    });
 }
 
 async function updateGame(game) {

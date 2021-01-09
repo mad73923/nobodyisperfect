@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
-import { Game } from '@app/_models';
+import { Game, Answer } from '@app/_models';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +36,9 @@ export class GameService {
 
   newRound(id: Number) {
     return this.http.put<any>(`${environment.apiUrl}/game/newRound/${id}`, null);
+  }
+
+  addAnswer(answer: Answer){
+    return this.http.post<any>(`${environment.apiUrl}/game/answer`, answer);
   }
 }

@@ -7,7 +7,8 @@ const schema = new Schema({
     text: { type: String, required: true },
     createdAt: {type: Date, default: Date.now},
     pickedBy: [{ type: ObjectId, ref: 'User'}],
-    fromQuestion: { type: ObjectId, ref: 'Question', required: true}
+    fromQuestion: { type: ObjectId, ref: 'Question', required: true},
+    game: { type: ObjectId, ref: 'Game', required: true}
 });
 
 module.exports = mongoose.model('Answer', schema);

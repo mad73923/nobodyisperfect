@@ -1,12 +1,15 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { GameService } from '@app/_services/game.service';
-import { Game, User, Role } from '@app/_models';
+import { Game, User, Role, Answer } from '@app/_models';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first, timeout } from 'rxjs/operators';
 import { AuthenticationService } from '@app/_services';
 import { GameSocketService } from '@app/_helpers/socketio';
 import { Observable, Subscription, timer } from 'rxjs';
 import { GamelogComponent } from './gamelog/gamelog.component';
+import { error } from 'protractor';
+import { async } from '@angular/core/testing';
+import { TransitiveCompileNgModuleMetadata } from '@angular/compiler';
 
 @Component({
   selector: 'app-gameview',
@@ -21,6 +24,7 @@ export class GameviewComponent implements OnInit {
   user: User;
   answerText: String;
   routerSubscription: Subscription;
+  hasHandedInAnswer: Boolean;
 
   constructor(private gameService: GameService,
               private route: ActivatedRoute,
@@ -32,6 +36,7 @@ export class GameviewComponent implements OnInit {
     this.error = '';
     this.user = this.authService.userValue;
     this.answerText = '';
+    this.hasHandedInAnswer = false;
   }
 
   ngOnInit(): void {
@@ -42,12 +47,14 @@ export class GameviewComponent implements OnInit {
     this.gameSocket.on('gameUpdate', (data) => {
       this.gameService.getById(this.game._id).pipe(first()).subscribe(game =>{
         this.game = game;
+        this.updateHandedIn();
       })
     });
     let gameId =this.route.snapshot.params['id'];
       if(gameId){
         this.gameService.getById(gameId).pipe(first()).subscribe(game => {
           this.game = game;
+          this.updateHandedIn();
           this.gameSocket.emit('gameJoined', this.game._id.toString(), this.user.username);
         },
         (err) => {
@@ -79,8 +86,34 @@ export class GameviewComponent implements OnInit {
     return this.user._id == this.game.currentRound.reader._id || this.user.role.includes(Role.Admin)
   }
 
+  updateGame(){
+    this.gameService.getById(this.game._id).pipe(first()).subscribe(game =>{
+      this.game = game;
+      this.updateHandedIn();
+    });
+  }
+
+  updateHandedIn(){
+    this.hasHandedInAnswer = false;
+    this.game.currentRound.answers.map(answer =>
+      {if(answer.creator._id == this.user._id){
+        this.hasHandedInAnswer = true;
+      }});
+  }
+
   sendAnswer() {
-    
+    let answer = new Answer();
+    answer.creator = this.user;
+    answer.text = this.answerText;
+    answer.fromQuestion = this.game.currentRound.currentQuestion,
+    answer.game = this.game;
+    this.gameService.addAnswer(answer).pipe(first()).subscribe(data =>
+      {
+        this.hasHandedInAnswer = true;
+        // update happens via socketio
+        //this.updateGame();
+      }
+      , error => this.error = error);
   }
 
 }
