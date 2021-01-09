@@ -225,11 +225,19 @@ async function addAnswer(answer, user) {
         }
     })
     await db.Answer(answer).save((err, answer) => {
-        return db.Round.updateOne({_id: round._id}, {$addToSet: {answers: answer._id}})
-        .then(data => {
+        db.Round.findOneAndUpdate({_id: round._id}, {$addToSet: {answers: answer._id}}, {returnOriginal: false})
+        .then(newround => {
         io.io().in(game.id).emit('logUpdate', `A player has handed in a answer.`);
+        // next game state if all answers handed in
+        if(newround.answers.length == game.players.length){
+            db.Game.updateOne({_id: game._id}, {currentState: gameState.PickAnswer})
+            .then(data => {
+                io.io().in(game.id).emit('gameUpdate');
+            });
+        }else{
         io.io().in(game.id).emit('gameUpdate');
-            return data;});
+        }
+            return newround;});
         // TODO ERROR handling
     });
 }
