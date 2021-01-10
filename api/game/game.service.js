@@ -228,18 +228,52 @@ async function addAnswer(answer, user) {
         db.Round.findOneAndUpdate({_id: round._id}, {$addToSet: {answers: answer._id}}, {returnOriginal: false})
         .then(newround => {
         io.io().in(game.id).emit('logUpdate', `A player has handed in a answer.`);
+        console.log(newround.answers.length, game.players.length);
         // next game state if all answers handed in
         if(newround.answers.length == game.players.length){
-            db.Game.updateOne({_id: game._id}, {currentState: gameState.PickAnswer})
-            .then(data => {
-                io.io().in(game.id).emit('gameUpdate');
-            });
+            switchStateToPickAnswer(game, newround);
         }else{
             io.io().in(game.id).emit('gameUpdate');
         }
             return newround;});
         // TODO ERROR handling
     });
+}
+
+function switchStateToPickAnswer(game, round) {
+    let correctAnswerIndex = randomIntInc(0, round.answers.length);
+    console.log(round.answers);
+    round.answers = shuffle(round.answers);
+    console.log(round.answers);
+    db.Round.findOneAndUpdate({_id: round._id}, {$set: {answers: round.answers, correctAnswerIndex: correctAnswerIndex}})
+    .then(
+    data2 =>{
+        // switch state
+    db.Game.updateOne({_id: game._id}, {currentState: gameState.PickAnswer})
+    .then(data => {
+        io.io().in(game.id).emit('gameUpdate');
+    })
+    }
+    );
+}
+
+/**
+ * Shuffles array in place.
+ * @param {Array} a items An array containing the items.
+ */
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
+function randomIntInc(low, high) {
+    return Math.floor(Math.random() * (high - low + 1) + low)
 }
 
 async function updateGame(game) {

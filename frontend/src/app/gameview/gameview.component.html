@@ -22,7 +22,7 @@
     </div>
 
     <div *ngIf="game.currentState == 'PickAnswer'">
-        PickAnswer
+        <app-gamepickanswer></app-gamepickanswer>
     </div>
 
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
