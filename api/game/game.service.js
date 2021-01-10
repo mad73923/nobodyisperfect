@@ -235,7 +235,7 @@ async function addAnswer(answer, user) {
                 io.io().in(game.id).emit('gameUpdate');
             });
         }else{
-        io.io().in(game.id).emit('gameUpdate');
+            io.io().in(game.id).emit('gameUpdate');
         }
             return newround;});
         // TODO ERROR handling

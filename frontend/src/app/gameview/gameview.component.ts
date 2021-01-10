@@ -9,7 +9,6 @@ import { Observable, Subscription, timer } from 'rxjs';
 import { GamelogComponent } from './gamelog/gamelog.component';
 import { error } from 'protractor';
 import { async } from '@angular/core/testing';
-import { TransitiveCompileNgModuleMetadata } from '@angular/compiler';
 
 @Component({
   selector: 'app-gameview',
@@ -95,10 +94,13 @@ export class GameviewComponent implements OnInit {
 
   updateHandedIn(){
     this.hasHandedInAnswer = false;
-    this.game.currentRound.answers.map(answer =>
-      {if(answer.creator._id == this.user._id){
-        this.hasHandedInAnswer = true;
-      }});
+    if(this.game.currentState == 'ReadQuestion')
+    {
+      this.game.currentRound.answers.map(answer =>
+        {if(answer.creator._id == this.user._id){
+          this.hasHandedInAnswer = true;
+        }});
+    }
   }
 
   sendAnswer() {

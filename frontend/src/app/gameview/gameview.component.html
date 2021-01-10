@@ -21,6 +21,10 @@
         <h5 class="text-center">Waiting for the other players to hand in their answer...</h5>
     </div>
 
+    <div *ngIf="game.currentState == 'PickAnswer'">
+        PickAnswer
+    </div>
+
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
 
     <h5>Log:</h5>
