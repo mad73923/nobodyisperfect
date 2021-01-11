@@ -13,7 +13,8 @@ module.exports = {
     deleteGame,
     joinGame,
     newRound,
-    addAnswer
+    addAnswer,
+    getPossibleAnswers
 }
 
 const lookupMaster =
@@ -101,7 +102,8 @@ const lookupRound = {$lookup:
                     ],
                     as: "answers"
                 }
-            }
+            },
+            {$project: {"correctAnswerIndex": 0}}
         ],
         as: "currentRound"
     }
@@ -228,7 +230,6 @@ async function addAnswer(answer, user) {
         db.Round.findOneAndUpdate({_id: round._id}, {$addToSet: {answers: answer._id}}, {returnOriginal: false})
         .then(newround => {
         io.io().in(game.id).emit('logUpdate', `A player has handed in a answer.`);
-        console.log(newround.answers.length, game.players.length);
         // next game state if all answers handed in
         if(newround.answers.length == game.players.length){
             switchStateToPickAnswer(game, newround);
@@ -242,9 +243,7 @@ async function addAnswer(answer, user) {
 
 function switchStateToPickAnswer(game, round) {
     let correctAnswerIndex = randomIntInc(0, round.answers.length);
-    console.log(round.answers);
     round.answers = shuffle(round.answers);
-    console.log(round.answers);
     db.Round.findOneAndUpdate({_id: round._id}, {$set: {answers: round.answers, correctAnswerIndex: correctAnswerIndex}})
     .then(
     data2 =>{
@@ -274,6 +273,44 @@ function shuffle(a) {
 
 function randomIntInc(low, high) {
     return Math.floor(Math.random() * (high - low + 1) + low)
+}
+
+async function getPossibleAnswers(roundid) {
+    let round = await db.Round.findOne({_id: ObjectId(roundid)});
+    let gameDB = await db.Game.findOne({_id: round.fromGame});
+
+    if(gameDB.currentState != gameState.PickAnswer){
+        throw "Wrong game state for picking answers."
+    }
+    let answers = await db.Round.aggregate([
+        {$match: {_id: ObjectId(roundid)}},
+        {$lookup: {
+            from: "answers",
+            let: {answer_id: "$answers"},
+            pipeline:
+            [
+                {$match: {$expr:{$in:["$_id", "$$answer_id"]}}},
+                {$project: {"text": 1, "_id": 1}}
+            ],
+            as: "answerTexts"
+        }},
+        {$lookup: {
+            from: "questions",
+            let: {question_id: "$currentQuestion"},
+            pipeline:
+            [
+                {$match: {$expr:{$eq:["$_id", "$$question_id"]}}},
+                {$project: {"text": "$correctAnswer", "_id": 1}},
+            ],
+            as: "correctAnswer"
+        }},
+        {$unwind: "$correctAnswer"},
+        {$project: {"answerTexts": 1, "correctAnswer": 1, "correctAnswerIndex": 1}}
+    ]);
+    answers = answers[0];
+    let answerOrder = answers.answerTexts;
+    answerOrder.splice(answers.correctAnswerIndex, 0, answers.correctAnswer);
+    return answerOrder;
 }
 
 async function updateGame(game) {

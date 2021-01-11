@@ -82,7 +82,7 @@ export class GameviewComponent implements OnInit {
   }
 
   maySeeQuestion() {
-    return this.user._id == this.game.currentRound.reader._id || this.user.role.includes(Role.Admin)
+    return this.user._id == this.game.currentRound.reader._id || this.user.role.includes(Role.Admin) || this.user._id == this.game.gameMaster._id;
   }
 
   updateGame(){

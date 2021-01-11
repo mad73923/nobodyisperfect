@@ -10,8 +10,8 @@
 
     <div *ngIf="game.currentState == 'ReadQuestion' && !hasHandedInAnswer">
         <h5>Question</h5>
+        <h6 class="text-center font-italic">Question is presented by {{game.currentRound.reader.username}}.</h6>
         <h5 class="text-center" *ngIf="maySeeQuestion()">{{game.currentRound.currentQuestion.text}}</h5>
-        <h6 class="text-center font-italic" *ngIf="!maySeeQuestion()">Question is presented by {{game.currentRound.reader.username}}.</h6>
         <h5>Your answer:</h5>
         <textarea class="form-control my-3" rows="4" style="resize: none;" [(ngModel)]="answerText"></textarea>
         <div class="text-right"><button type="button" class="btn btn-primary" (click)="sendAnswer()">Send</button></div>
@@ -22,7 +22,7 @@
     </div>
 
     <div *ngIf="game.currentState == 'PickAnswer'">
-        <app-gamepickanswer></app-gamepickanswer>
+        <app-gamepickanswer [game]="game"></app-gamepickanswer>
     </div>
 
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>

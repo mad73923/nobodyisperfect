@@ -18,6 +18,7 @@ router.put('/newRound/:id', authorize([Role.Admin, Role.GameMaster]), newRound)
 router.delete('/:id', authorize([Role.Admin, Role.GameMaster]), deleteGame)
 
 router.post('/answer', authorize(), addAnswer)
+router.get('/answer/possible/:id', authorize(), answerPossible);
 
 module.exports = router;
 
@@ -103,4 +104,12 @@ function addAnswer(req, res, next) {
             res.json(data);
         })
         .catch(next);
+}
+
+function answerPossible(req, res, next) {
+    gameService.getPossibleAnswers(req.params.id)
+    .then(data => {
+        res.json(data);
+    })
+    .catch(next);
 }
