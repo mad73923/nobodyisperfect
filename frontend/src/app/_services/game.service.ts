@@ -45,4 +45,9 @@ export class GameService {
   getPossibleAnswers(id: Number){
     return this.http.get<any>(`${environment.apiUrl}/game/answer/possible/${id}`);
   }
+
+  pickAnswer(roundid: Number, answerid: Number){
+    let body = {roundid: roundid, answerid: answerid};
+    return this.http.post<any>(`${environment.apiUrl}/game/answer/pick`, body);
+  }
 }

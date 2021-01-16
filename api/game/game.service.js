@@ -14,7 +14,8 @@ module.exports = {
     joinGame,
     newRound,
     addAnswer,
-    getPossibleAnswers
+    getPossibleAnswers,
+    pickAnswer
 }
 
 const lookupMaster =
@@ -311,6 +312,56 @@ async function getPossibleAnswers(roundid) {
     let answerOrder = answers.answerTexts;
     answerOrder.splice(answers.correctAnswerIndex, 0, answers.correctAnswer);
     return answerOrder;
+}
+
+async function pickAnswer(userid, roundid, answerid) {
+    // check if it is answer or correct answer
+    let answer = await db.Answer.findOne({_id: ObjectId(answerid)});
+    if(!answer){
+        // picked answer should be correct answer (Question ID)
+        let corrAnswer = await db.Question.findOne({_id: ObjectId(answerid)});
+        if(!corrAnswer){
+            throw "Non-valid answer ID";
+        }
+    }
+    let round = await db.Round.aggregate([
+        {$match: {_id: ObjectId(roundid)}},
+        // fill answered by
+        {$lookup:
+            {
+                from: "answers",
+                let: {answer_id: "$answers"},
+                pipeline:
+                [
+                    {$match: {$expr:{$in:["$_id", "$$answer_id"]}}},
+                    {$project: {"pickedBy": 1}}
+                ],
+                as: "answersPicked"
+            }
+        }
+    ]);
+    round = round[0];
+    // check if player already picked answer
+    if(round.answersPicked.some(answer => answer.pickedBy.some(player => player.equals(userid))) || round.correctAnswerPickedBy.some(player => player.equals(userid))){
+        throw "Player already picked a answer"
+    }
+    let game = await db.Game.findOne({_id: round.fromGame});
+    if(game.currentState != state.PickAnswer){
+        throw "Wrong game state"
+    }
+    if(game.currentRound != roundid){
+        throw "Wrong round"
+    }
+    // TODO check if it is his own answer
+    // check if player is part of game
+    if(!game.players.some(player => player.equals(userid))){
+        throw "User not part of game"
+    }
+    if(answer){
+        return await db.Answer.updateOne({_id: ObjectId(answerid)}, {$addToSet:{pickedBy: ObjectId(userid)}}).exec();
+    }else{
+        return await db.Round.updateOne({_id: ObjectId(roundid)}, {$addToSet:{correctAnswerPickedBy: ObjectId(userid)}}).exec();
+    }
 }
 
 async function updateGame(game) {

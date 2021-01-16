@@ -41,4 +41,10 @@ export class GamepickanswerComponent implements OnInit {
     return this.game.currentRound.reader._id == this.user._id || this.user.role.includes(Role.Admin) || this.game.gameMaster._id == this.user._id;
   }
 
+  pickAnswer(answerid: Number){
+    this.gameService.pickAnswer(this.game.currentRound._id, answerid).pipe(first()).subscribe(res => {
+      console.log(res);
+    })
+  }
+
 }
