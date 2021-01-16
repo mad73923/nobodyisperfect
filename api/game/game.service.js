@@ -391,12 +391,44 @@ async function pickAnswer(userid, roundid, answerid) {
     if(!game.players.some(player => player.equals(userid))){
         throw "User not part of game"
     }
+
     if(answer){
-        return await db.Answer.updateOne({_id: ObjectId(answerid)}, {$addToSet:{pickedBy: ObjectId(userid)}}).exec();
+        await db.Answer.updateOne({_id: ObjectId(answerid)}, {$addToSet:{pickedBy: ObjectId(userid)}}).exec();
     }else{
-        return await db.Round.updateOne({_id: ObjectId(roundid)}, {$addToSet:{correctAnswerPickedBy: ObjectId(userid)}}).exec();
+        await db.Round.updateOne({_id: ObjectId(roundid)}, {$addToSet:{correctAnswerPickedBy: ObjectId(userid)}}).exec();
     }
     // TODO change state if all answers handed in
+    let roundNew = await db.Round.aggregate([
+        {$match: {_id: ObjectId(roundid)}},
+        // fill answered by
+        {$lookup:
+            {
+                from: "answers",
+                let: {answer_id: "$answers"},
+                pipeline:
+                [
+                    {$match: {$expr:{$in:["$_id", "$$answer_id"]}}},
+                    {$project: {"pickedBy": 1}}
+                ],
+                as: "answersPicked"
+            }
+        }
+    ]);
+    roundNew = roundNew[0];
+    let pickedAnswerCount = roundNew.answersPicked.map(answer => answer.pickedBy.length).reduce((a, b) => {return a+b}) +
+    roundNew.correctAnswerPickedBy.length;
+    if(pickedAnswerCount == game.players.length){
+        await switchStateToRanking(game);
+    }
+    return {message: "OK"};
+}
+
+function switchStateToRanking(game) {
+    // switch state
+    db.Game.updateOne({_id: game._id}, {currentState: gameState.Ranking})
+    .then(data => {
+        io.io().in(game.id).emit('gameUpdate');
+    })
 }
 
 async function updateGame(game) {
