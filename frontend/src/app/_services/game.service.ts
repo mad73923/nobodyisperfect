@@ -46,6 +46,10 @@ export class GameService {
     return this.http.get<any>(`${environment.apiUrl}/game/answer/possible/${id}`);
   }
 
+  getHasAlreadyPicked(roundId: Number){
+    return this.http.get<Boolean>(`${environment.apiUrl}/game/answer/hasPicked/${roundId}`);
+  }
+
   pickAnswer(roundid: Number, answerid: Number){
     let body = {roundid: roundid, answerid: answerid};
     return this.http.post<any>(`${environment.apiUrl}/game/answer/pick`, body);

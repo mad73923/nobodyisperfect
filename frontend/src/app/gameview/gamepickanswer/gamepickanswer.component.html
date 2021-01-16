@@ -6,6 +6,9 @@
 </div>
 <div class="container">
     <div *ngFor="let answer of possibleAnswers; let i = index" class="text-center row my-3">
-    <button type="button" class="btn btn-lg" [ngClass]="answer.own?'btn-secondary disabled':'btn-primary'" [disabled]="answer.own" (click)="pickAnswer(answer._id)">{{toLetters(i+1)}}</button><div class="mx-3" *ngIf="isReaderOrGamemasterOrAdmin()">{{answer.text}}</div>
+    <button type="button" class="btn btn-lg" [ngClass]="answer.own|| hasAlreadyPicked?'btn-secondary disabled':'btn-primary'" [disabled]="answer.own|| hasAlreadyPicked" (click)="pickAnswer(answer._id)">{{toLetters(i+1)}}</button><div class="mx-3" *ngIf="isReaderOrGamemasterOrAdmin()">{{answer.text}}</div>
     </div>
+</div>
+<div *ngIf="hasAlreadyPicked">
+    <h5 class="text-center">Waiting for the other players to pick their answer...</h5>
 </div>

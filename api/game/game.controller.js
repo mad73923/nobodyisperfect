@@ -20,6 +20,7 @@ router.delete('/:id', authorize([Role.Admin, Role.GameMaster]), deleteGame)
 router.post('/answer', authorize(), addAnswer)
 router.get('/answer/possible/:id', authorize(), answerPossible)
 
+router.get('/answer/hasPicked/:id', authorize(), hasAlreadyPicked)
 router.post('/answer/pick', authorize(), pickAnswer)
 
 module.exports = router;
@@ -116,10 +117,18 @@ function answerPossible(req, res, next) {
     .catch(next);
 }
 
+function hasAlreadyPicked(req, res, next) {
+    gameService.hasAlreadyPicked(req.user.id, req.params.id)
+    .then(data => {
+        res.json(data);
+    })
+    .catch(next);
+}
+
 function pickAnswer(req, res, next) {
     gameService.pickAnswer(req.user.id, req.body.roundid, req.body.answerid)
     .then(data => {
-        res.sendStatus(200);
+        res.json(data);
     })
     .catch(next);
 }

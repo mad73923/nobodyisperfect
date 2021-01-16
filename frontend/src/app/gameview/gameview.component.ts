@@ -114,6 +114,7 @@ export class GameviewComponent implements OnInit {
         this.hasHandedInAnswer = true;
         // update happens via socketio
         //this.updateGame();
+        this.answerText = "";
       }
       , error => this.error = error);
   }

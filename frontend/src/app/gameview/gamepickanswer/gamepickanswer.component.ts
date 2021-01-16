@@ -16,16 +16,21 @@ export class GamepickanswerComponent implements OnInit {
   possibleAnswers: Array<any>;
   @Input() game: Game;
   user: User;
+  hasAlreadyPicked: Boolean;
 
   constructor(private gameService: GameService,
     public authService: AuthenticationService) { 
     this.user = this.authService.userValue;
     this.possibleAnswers = [];
+    this.hasAlreadyPicked = false;
   }
 
   ngOnInit(): void {
     this.gameService.getPossibleAnswers(this.game.currentRound._id).pipe(first()).subscribe(answers => {
       this.possibleAnswers = answers;
+    });
+    this.gameService.getHasAlreadyPicked(this.game.currentRound._id).pipe(first()).subscribe(data => {
+      this.hasAlreadyPicked = data;
     });
   }
 
@@ -43,8 +48,8 @@ export class GamepickanswerComponent implements OnInit {
 
   pickAnswer(answerid: Number){
     this.gameService.pickAnswer(this.game.currentRound._id, answerid).pipe(first()).subscribe(res => {
-      console.log(res);
-    })
+      this.hasAlreadyPicked = true;
+    });
   }
 
 }
