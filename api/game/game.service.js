@@ -276,7 +276,7 @@ function randomIntInc(low, high) {
     return Math.floor(Math.random() * (high - low + 1) + low)
 }
 
-async function getPossibleAnswers(roundid) {
+async function getPossibleAnswers(roundid, userid) {
     let round = await db.Round.findOne({_id: ObjectId(roundid)});
     let gameDB = await db.Game.findOne({_id: round.fromGame});
 
@@ -291,7 +291,10 @@ async function getPossibleAnswers(roundid) {
             pipeline:
             [
                 {$match: {$expr:{$in:["$_id", "$$answer_id"]}}},
-                {$project: {"text": 1, "_id": 1}}
+                {$project: {"text": 1, "_id": 1, 
+                    own: {$cond: {if: {$eq: [ObjectId(userid), "$creator"]},
+                then: true, 
+                else: "$$REMOVE"}}}}
             ],
             as: "answerTexts"
         }},

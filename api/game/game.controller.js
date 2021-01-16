@@ -109,7 +109,7 @@ function addAnswer(req, res, next) {
 }
 
 function answerPossible(req, res, next) {
-    gameService.getPossibleAnswers(req.params.id)
+    gameService.getPossibleAnswers(req.params.id, req.user.id)
     .then(data => {
         res.json(data);
     })
