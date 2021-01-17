@@ -26,7 +26,8 @@ import { GameviewComponent } from './gameview/gameview.component';
 import { GameSocketService } from './_helpers/socketio';
 import { GamelogComponent } from './gameview/gamelog/gamelog.component';;
 import { GamepickanswerComponent } from './gameview/gamepickanswer/gamepickanswer.component'
-
+;
+import { GameresultComponent } from './gameview/gameresult/gameresult.component'
 @NgModule({
     imports: [
         BrowserModule,
@@ -50,7 +51,8 @@ import { GamepickanswerComponent } from './gameview/gamepickanswer/gamepickanswe
         GamecardComponent ,
         GameviewComponent ,
         GamelogComponent ,
-        GamepickanswerComponent],
+        GamepickanswerComponent,
+        GameresultComponent],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

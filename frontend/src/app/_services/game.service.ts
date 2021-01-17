@@ -38,6 +38,10 @@ export class GameService {
     return this.http.put<any>(`${environment.apiUrl}/game/newRound/${id}`, null);
   }
 
+  getResult(gameId: Number){
+    return this.http.get<any>(`${environment.apiUrl}/game/result/${gameId}`)
+  }
+
   addAnswer(answer: Answer){
     return this.http.post<any>(`${environment.apiUrl}/game/answer`, answer);
   }
@@ -54,4 +58,5 @@ export class GameService {
     let body = {roundid: roundid, answerid: answerid};
     return this.http.post<any>(`${environment.apiUrl}/game/answer/pick`, body);
   }
+
 }

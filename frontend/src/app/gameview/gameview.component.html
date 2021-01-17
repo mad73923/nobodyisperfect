@@ -25,6 +25,10 @@
         <app-gamepickanswer [game]="game"></app-gamepickanswer>
     </div>
 
+    <div *ngIf="game.currentState == 'Ranking'">
+        <app-gameresult [game]="game"></app-gameresult>
+    </div>
+
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>
 
     <h5>Log:</h5>

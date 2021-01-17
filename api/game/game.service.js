@@ -16,7 +16,8 @@ module.exports = {
     addAnswer,
     getPossibleAnswers,
     hasAlreadyPicked,
-    pickAnswer
+    pickAnswer,
+    getResult
 }
 
 const lookupMaster =
@@ -397,7 +398,7 @@ async function pickAnswer(userid, roundid, answerid) {
     }else{
         await db.Round.updateOne({_id: ObjectId(roundid)}, {$addToSet:{correctAnswerPickedBy: ObjectId(userid)}}).exec();
     }
-    // TODO change state if all answers handed in
+    // change state if all answers handed in
     let roundNew = await db.Round.aggregate([
         {$match: {_id: ObjectId(roundid)}},
         // fill answered by
@@ -451,4 +452,95 @@ async function joinGame(userId, gameid) {
     // addToSet: avoid double registration
     await db.Game.updateOne({_id: ObjectId(gameid)}, {$addToSet: {players: ObjectId(userId)}});
     return 'Player joined.';
+}
+
+async function getResult(gameid) {
+    let game = await db.Game.findOne({_id: ObjectId(gameid)}).exec();
+    if(!game){
+        throw "Wrong Game ID"
+    }
+    if(game.currentState != gameState.Ranking){
+        throw "Not in state Ranking / Result"
+    }
+    let round = await db.Round.aggregate([
+        {$match: {_id: ObjectId(game.currentRound)}},
+        // fill answered by
+        {$lookup:
+            {
+                from: "answers",
+                let: {answer_id: "$answers"},
+                pipeline:
+                [
+                    {$match: {$expr:{$in:["$_id", "$$answer_id"]}}},
+                    {$lookup:
+                        {
+                            from: "users",
+                            let: {user_id: "$creator"},
+                            pipeline:
+                            [
+                                {$match: {$expr:{$eq:["$_id", "$$user_id"]}}},
+                                {$project: {"username": 1}}
+                            ],
+                            as: "creator"
+                        }},
+                    {$unwind: "$creator"},
+                    {$lookup:
+                        {
+                            from: "users",
+                            let: {user_ids: "$pickedBy"},
+                            pipeline:
+                            [
+                                {$match: {$expr:{$in:["$_id", "$$user_ids"]}}},
+                                {$project: {"username": 1}}
+                            ],
+                            as: "pickedBy"
+                        }},
+                    {$addFields:
+                        {
+                            "correct": false
+                        }
+                    },
+                    {$project: {"creator": 1,"pickedBy": 1, "text": 1, "correct": 1}}
+                ],
+                as: "answers"
+            }
+        },
+        {$lookup:
+            {
+                from: "questions",
+                let: {question_id: "$currentQuestion", pickedBy: "$correctAnswerPickedBy"},
+                pipeline:
+                [
+                    {$match: {$expr: {$eq: ["$_id", "$$question_id"]}}},
+                    {$lookup:
+                        {
+                            from: "users",
+                            let: {pickedBy: "$$pickedBy"},
+                            pipeline:
+                            [
+                                {$match: {$expr:{$in:["$_id", "$$pickedBy"]}}},
+                                {$project: {"username": 1}}
+                            ],
+                            as: "pickedBy"
+                        }
+                    },
+                    {$addFields:
+                        {
+                            "correct": true,
+                            "text": "$correctAnswer"
+                        }
+                    },
+                    {$project: {"pickedBy": 1,"text": 1, "correct": 1}}
+                ],
+                as: "currentQuestion"
+            }
+        },
+        {$unwind: "$currentQuestion"},
+        {$project: {"currentQuestion": 1, "correctAnswerIndex": 1, "answers": 1}}
+    ]);
+    round = round[0];
+    round.answers.splice(round.correctAnswerIndex, 0, round.currentQuestion);
+    delete round.currentQuestion;
+    delete round.correctAnswerIndex;
+    return round;
 }

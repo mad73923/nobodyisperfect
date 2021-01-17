@@ -16,12 +16,14 @@ router.put('/', authorize([Role.Admin, Role.GameMaster]), updateGame)
 router.put('/join/:id', authorize(), joinGame)
 router.put('/newRound/:id', authorize([Role.Admin, Role.GameMaster]), newRound)
 router.delete('/:id', authorize([Role.Admin, Role.GameMaster]), deleteGame)
+router.get('/result/:id', authorize(), getResult)
 
 router.post('/answer', authorize(), addAnswer)
 router.get('/answer/possible/:id', authorize(), answerPossible)
 
 router.get('/answer/hasPicked/:id', authorize(), hasAlreadyPicked)
 router.post('/answer/pick', authorize(), pickAnswer)
+
 
 module.exports = router;
 
@@ -127,6 +129,14 @@ function hasAlreadyPicked(req, res, next) {
 
 function pickAnswer(req, res, next) {
     gameService.pickAnswer(req.user.id, req.body.roundid, req.body.answerid)
+    .then(data => {
+        res.json(data);
+    })
+    .catch(next);
+}
+
+function getResult(req, res, next) {
+    gameService.getResult(req.params.id)
     .then(data => {
         res.json(data);
     })
