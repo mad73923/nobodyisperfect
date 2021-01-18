@@ -42,6 +42,10 @@ export class GameService {
     return this.http.get<any>(`${environment.apiUrl}/game/result/${gameId}`)
   }
 
+  getRanking(gameId: Number){
+    return this.http.get<any>(`${environment.apiUrl}/game/ranking/${gameId}`);
+  }
+
   addAnswer(answer: Answer){
     return this.http.post<any>(`${environment.apiUrl}/game/answer`, answer);
   }

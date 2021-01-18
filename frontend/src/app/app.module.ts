@@ -24,10 +24,10 @@ import { GameoverviewComponent } from './gameoverview/gameoverview.component';
 import { GamecardComponent } from './gameoverview/gamecard/gamecard.component';
 import { GameviewComponent } from './gameview/gameview.component';
 import { GameSocketService } from './_helpers/socketio';
-import { GamelogComponent } from './gameview/gamelog/gamelog.component';;
-import { GamepickanswerComponent } from './gameview/gamepickanswer/gamepickanswer.component'
-;
-import { GameresultComponent } from './gameview/gameresult/gameresult.component'
+import { GamelogComponent } from './gameview/gamelog/gamelog.component';
+import { GamepickanswerComponent } from './gameview/gamepickanswer/gamepickanswer.component';
+import { GameresultComponent } from './gameview/gameresult/gameresult.component';
+import { GamerankingComponent } from './gameview/gameranking/gameranking.component';
 @NgModule({
     imports: [
         BrowserModule,
@@ -52,7 +52,8 @@ import { GameresultComponent } from './gameview/gameresult/gameresult.component'
         GameviewComponent ,
         GamelogComponent ,
         GamepickanswerComponent,
-        GameresultComponent],
+        GameresultComponent,
+        GamerankingComponent],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

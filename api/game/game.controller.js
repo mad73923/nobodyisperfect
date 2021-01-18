@@ -17,6 +17,7 @@ router.put('/join/:id', authorize(), joinGame)
 router.put('/newRound/:id', authorize([Role.Admin, Role.GameMaster]), newRound)
 router.delete('/:id', authorize([Role.Admin, Role.GameMaster]), deleteGame)
 router.get('/result/:id', authorize(), getResult)
+router.get('/ranking/:id', authorize(), getRanking)
 
 router.post('/answer', authorize(), addAnswer)
 router.get('/answer/possible/:id', authorize(), answerPossible)
@@ -137,6 +138,14 @@ function pickAnswer(req, res, next) {
 
 function getResult(req, res, next) {
     gameService.getResult(req.params.id)
+    .then(data => {
+        res.json(data);
+    })
+    .catch(next);
+}
+
+function getRanking(req, res, next) {
+    gameService.getRanking(req.params.id)
     .then(data => {
         res.json(data);
     })

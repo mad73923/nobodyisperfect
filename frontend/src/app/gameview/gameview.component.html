@@ -27,6 +27,7 @@
 
     <div *ngIf="game.currentState == 'Ranking'">
         <app-gameresult [game]="game"></app-gameresult>
+        <app-gameranking [game]="game"></app-gameranking>
     </div>
 
     <div *ngIf="error" class="alert alert-danger my-0">{{error}}</div>

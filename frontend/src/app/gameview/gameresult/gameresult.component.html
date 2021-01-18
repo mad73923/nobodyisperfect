@@ -6,10 +6,10 @@
     <button type="button" class="btn btn-lg btn-secondary disabled" disabled>{{toLetters(i+1)}}</button>
     <div class="mx-3 col">{{answer.text}}</div>
     <div class="col" >
-        <div *ngIf="answer.creator"><p><b>Author:</b> {{answer.creator.username}} {{answer.pickedBy.length>0?'+'+answer.pickedBy.length:''}}</p></div>
+        <div *ngIf="answer.creator"><p><b>Author:</b> {{answer.creator.username}} {{answer.pickedBy.length>0?'+'+answer.pickedBy.length*2:''}}</p></div>
         <div *ngIf="!answer.creator"></div>
         <div>
-            <p><b>Picked by: </b><span *ngFor="let player of answer.pickedBy; let isLast=last">{{player.username}} {{answer.correct?'+1':''}}{{isLast?'':','}}</span></p>
+            <p><b>Picked by: </b><span *ngFor="let player of answer.pickedBy; let isLast=last">{{player.username}} {{answer.correct?'+1':''}}{{isLast?'':', '}}</span></p>
         </div>
     </div>
     </div>

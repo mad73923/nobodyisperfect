@@ -17,7 +17,8 @@ module.exports = {
     getPossibleAnswers,
     hasAlreadyPicked,
     pickAnswer,
-    getResult
+    getResult,
+    getRanking
 }
 
 const lookupMaster =
@@ -543,4 +544,75 @@ async function getResult(gameid) {
     delete round.currentQuestion;
     delete round.correctAnswerIndex;
     return round;
+}
+
+async function getRanking(gameid) {
+    let game = await db.Game.findOne({_id: ObjectId(gameid)}).exec();
+    if(!game){
+        throw "Wrong Game ID"
+    }
+    //TODO check if player is part of game or admin
+    let ranking = await db.Game.aggregate([
+        {$match: {_id: ObjectId(game._id)}},
+        // lookup players and add score field
+        {$lookup: {
+            from: "users",
+            let: {players: "$players"},
+            pipeline:
+            [
+                {$match:{$expr:{$in:["$_id", "$$players"]}}},
+                {$addFields: {
+                    "score": 0
+                }},
+                {$project:{"username": 1, "score": 1}}
+            ],
+            as: "players"
+        }},
+        {$lookup: {
+            from: "rounds",
+            let: {game_id: "$_id", players: "$players"},
+            pipeline:
+            [
+                {$match:{$expr:{$eq:["$fromGame", "$$game_id"]}}},
+                {$lookup:{
+                    from: "answers",
+                    let: {answers: "$answers"},
+                    pipeline:
+                    [
+                        {$match:{$expr:{$in:["$_id", "$$answers"]}}}
+                    ],
+                    as: "answers"
+                }}
+            ],
+            as: "rounds"
+        }
+        },
+        {$project: {players:{
+            $map: {
+                input: "$players",
+                as: "player",
+                in: {$mergeObjects: [
+                    "$$player",
+                    {"score": {$sum:{$concatArrays:[
+                        {$map:{
+                        input: "$rounds",
+                        as: "round",
+                        in: {$cond: [{$in:["$$player._id", "$$round.correctAnswerPickedBy"]}, 1, 0]}
+                    }}, {$map:{
+                        input: "$rounds",
+                        as: "round",
+                        in: {$sum:{$map:{
+                            input: "$$round.answers",
+                            as: "answer",
+                            in: {$cond: [{$eq:["$$player._id", "$$answer.creator"]}, {$multiply:[{$size: "$$answer.pickedBy"}, 2]}, 0]}}
+                        }}
+                    }}
+                    ]}}}
+                ]
+                }
+            }
+            }}
+        }
+    ]);
+    return ranking[0];
 }
