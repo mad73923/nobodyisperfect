@@ -2,12 +2,14 @@
 <table class="table">
     <thead class="thead-dark">
         <tr>
+            <th scope="col">#</th>
             <th scope="col">Username</th>
             <th scope="col">Score</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let player of (result.players||[])" [ngClass]="user._id==player._id?'table-warning':''">
+        <tr *ngFor="let player of (result.players||[]); let i = index" [ngClass]="user._id==player._id?'table-warning':''">
+            <td>{{i+1}}</td>
             <td>{{player.username}}</td>
             <td>{{player.score}}</td>
         </tr>
