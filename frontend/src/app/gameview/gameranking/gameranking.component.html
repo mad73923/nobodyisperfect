@@ -1,1 +1,15 @@
-<p>gameranking works!</p>
+<h5>Ranking:</h5>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Score</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let player of (result.players||[])" [ngClass]="user._id==player._id?'table-warning':''">
+            <td>{{player.username}}</td>
+            <td>{{player.score}}</td>
+        </tr>
+    </tbody>
+</table>
