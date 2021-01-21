@@ -21,7 +21,7 @@ async function createTestUser() {
             var newUser = {
                 firstName: 'Test',
                 lastName: 'User',
-                username: 'nobodyisadmin',
+                username: 'testadmin',
                 passwordHash: bcrypt.hashSync('test', 10),
                 role: [Role.Admin]
             }
