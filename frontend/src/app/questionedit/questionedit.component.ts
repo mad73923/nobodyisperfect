@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Question, User } from '../_models';
 import { AuthenticationService, UserService, QuestionService } from '../_services';
@@ -21,7 +21,8 @@ export class QuestionEditComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService,
               private userService: UserService,
               private questionService: QuestionService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute, 
+              private router: Router) {
     this.question = new Question();
     this.changesSaved = false;
     this.loading = false;
@@ -67,6 +68,7 @@ export class QuestionEditComponent implements OnInit {
         this.error = '';
         this.changesSaved = true;
         this.loading = false;
+        setTimeout(() => this.router.navigate(['/questions']), 500);
       }, 
       err => {
         this.onSavingError(err);
