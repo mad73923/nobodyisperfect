@@ -1,5 +1,4 @@
-﻿const config = require('config.json');
-const jwt = require('jsonwebtoken');
+﻿const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const crypto = require("crypto");
 const db = require('_helpers/db');
@@ -128,8 +127,14 @@ async function getRefreshToken(token) {
 }
 
 function generateJwtToken(user) {
+    let secret = "";
+    if("SECRET_STR" in process.env){
+        secret = process.env.SECRET_STR;
+    }else{
+        secret  = require('config.json').secret;
+    }
     // create a jwt token containing the user id that expires in 15 minutes
-    return jwt.sign({ sub: user.id, id: user.id }, config.secret, { expiresIn: '15m' });
+    return jwt.sign({ sub: user.id, id: user.id }, secret, { expiresIn: '15m' });
 }
 
 function generateRefreshToken(user, ipAddress) {
