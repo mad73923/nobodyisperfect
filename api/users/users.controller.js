@@ -125,7 +125,7 @@ function setTokenCookie(res, token)
     const cookieOptions = {
         httpOnly: true,
         expires: new Date(Date.now() + 7*24*60*60*1000),
-        sameSite: 'Lax',
+        sameSite: 'None',
         secure: true
     };
     res.cookie('refreshToken', token, cookieOptions);
