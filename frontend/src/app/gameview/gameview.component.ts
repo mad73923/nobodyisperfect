@@ -9,6 +9,7 @@ import { Observable, Subscription, timer } from 'rxjs';
 import { GamelogComponent } from './gamelog/gamelog.component';
 import { error } from 'protractor';
 import { async } from '@angular/core/testing';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-gameview',
@@ -24,6 +25,16 @@ export class GameviewComponent implements OnInit {
   answerText: String;
   routerSubscription: Subscription;
   hasHandedInAnswer: Boolean;
+
+  @HostListener('window:focus', ['$event'])
+  onFocus(event: FocusEvent): void {
+    this.gameSocket.emit('focusBack');
+  }
+
+  @HostListener('window:blur', ['$event'])
+  onBlur(event: FocusEvent): void {
+    this.gameSocket.emit('focusLost');
+  }
 
   constructor(private gameService: GameService,
               private route: ActivatedRoute,
