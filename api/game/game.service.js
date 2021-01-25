@@ -160,7 +160,8 @@ async function newRound(id) {
     }else{
         game.currentRound = await db.Round.findOne({_id: ObjectId(game.currentRound)});
         let currentReaderIndex = game.players.map(x => {return x._id}).indexOf(game.currentRound.reader._id);
-        if(currentReaderIndex < game.players.length - 1){
+        if((currentReaderIndex < game.players.length - 1) &&
+            (currentReaderIndex >= 0)){
             // pick next player
             nextReader = game.players[currentReaderIndex + 1];
         }else{
